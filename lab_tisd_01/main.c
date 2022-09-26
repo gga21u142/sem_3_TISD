@@ -61,9 +61,6 @@ int input_integer_t(integer_t *src_integer)
 
 	while (temp != '\n')
 	{
-		if (digits > M_SIGNIFICANT)
-			return INPUT_FAILURE;
-
 		if (isdigit(temp))
 		{
 			if (temp == '0' && digits != 0)
@@ -80,9 +77,13 @@ int input_integer_t(integer_t *src_integer)
 		else if (temp != ' ')
 			return WRONG_CHARACTER;
 		
+		if (digits > M_SIGNIFICANT)
+			return INPUT_FAILURE;
+
 		if (scanf("%c", &temp) != 1)
 			return WRONG_CHARACTER;
 	}
+	printf("%ld\n", digits);
 	src_integer->significant[digits] = -1;
 	return EXIT_SUCCESS;
 }
@@ -122,9 +123,6 @@ int input_float_t(float_t *src_float)
 
 	while (temp != '\n')
 	{
-		if (significant_digits > M_SIGNIFICANT)
-			return INPUT_FAILURE;
-
 		if (isdigit(temp))
 		{
 			if (temp == '0')
@@ -173,7 +171,7 @@ int input_float_t(float_t *src_float)
 
 			int exp_sign = 1;
 			int exp_digits = 0;
-			char exp_char[M_EXPONENT];
+			char exp_char[M_EXPONENT + 1];
 
 			if (scanf("%c", &temp) != 1 || temp == '\n')
 				return INPUT_FAILURE;
@@ -199,8 +197,6 @@ int input_float_t(float_t *src_float)
 
 			while (temp != '\n')
 			{
-				if (exp_digits > M_EXPONENT)
-					return INPUT_FAILURE;
 				if (isdigit(temp))
 				{
 					if (temp == '0' && exp_digits != 0)
@@ -217,12 +213,13 @@ int input_float_t(float_t *src_float)
 				else if (temp != ' ')
 					return INPUT_FAILURE;
 
+				if (exp_digits > M_EXPONENT)
+					return INPUT_FAILURE;
+
 				if (scanf("%c", &temp) != 1)
 					return INPUT_FAILURE;
 			}
 			exp_char[exp_digits] = '\0';
-			printf("%s\n", exp_char);
-			printf("%d\n", atoi(exp_char));
 			src_float->exponent = exp_sign * atoi(exp_char) + exp_add;
 			if (significant_digits == 0)
 			{
@@ -235,6 +232,9 @@ int input_float_t(float_t *src_float)
 		else if (temp != ' ')
 			return WRONG_CHARACTER;
 		
+		if (significant_digits > M_SIGNIFICANT)
+			return INPUT_FAILURE;
+
 		if (scanf("%c", &temp) != 1)
 			return WRONG_CHARACTER;
 	}
