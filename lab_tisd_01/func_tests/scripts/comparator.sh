@@ -1,7 +1,6 @@
 #!/bin/bash
 
-re="[-+]?[0-9]+"
-if [ "$(grep -Eo "$re" "$1")" == "$(grep -Eo "$re" "$2")" ]; then
+if cmp "$1" "$2" > /dev/null; then
 	exit 0
 else
 	exit 1
