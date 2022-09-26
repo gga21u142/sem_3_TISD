@@ -28,9 +28,11 @@ int main(int argc, char **argv)
 	}
 
 	// Вывод целого числа в стандартном виде
-	/* 
-	printf("Введенное целое число : ");
-	print_number_t(&src_integer); */
+	if (argc == 2 && ! strcmp(argv[1], "menu"))
+	{
+		printf("Введенное целое число : ");
+		print_number_t(&src_integer); 
+	}
 
 	//Ввод вещественного числа
 	if (argc == 2 && ! strcmp(argv[1], "menu"))
@@ -44,10 +46,12 @@ int main(int argc, char **argv)
 	}
 
 	// Вывод вещественного числа в стандартном виде
-	/* 
-	printf("Введенное вещественное число : ");
-	print_number_t(&src_float); */
-
+	if (argc == 2 && ! strcmp(argv[1], "menu"))
+	{
+		printf("Введенное вещественное число : ");
+		print_number_t(&src_float); 
+	}
+	
 	answer_t dst_answer;
 	int multi_error = multiply_integer_float(&src_integer, &src_float, &dst_answer);
 	if (multi_error != 0)

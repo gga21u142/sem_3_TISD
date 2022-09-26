@@ -247,8 +247,10 @@ int multiply_integer_float(number_t *src_integer, number_t *src_float, answer_t 
 
 	//если одно из чисел ноль, то сразу выдаем ответ и выходим
 	if (src_integer->significant[0] == 0 || src_float->significant[0] == 0)
+	{
+		dst_answer->significant[M_SIGNIFICANT * 2] = -1;
 		return EXIT_SUCCESS;
-
+	}
 	//определяем знак ответа
 	if (src_integer->sign != src_float->sign)
 		dst_answer->sign = '-';
