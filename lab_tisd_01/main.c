@@ -131,7 +131,7 @@ int input_float_t(float_t *src_float)
 				zeros_digits++;
 			else
 			{
-				if (dot_flag || significant_digits != 0)
+				if (dot_flag && significant_digits != 0)
 					for (size_t i = 0; i < zeros_digits; i++)
 					{
 						significant_digits++;
@@ -165,6 +165,7 @@ int input_float_t(float_t *src_float)
 		}
 		else if (temp == 'e' || temp == 'E')
 		{
+			
 			if (! dot_flag && significant_digits != 0)
 				exp_add = significant_digits + zeros_digits;
 
@@ -215,8 +216,12 @@ int input_float_t(float_t *src_float)
 				}
 				else if (temp != ' ')
 					return INPUT_FAILURE;
+				if (scanf("%c", &temp) != 1)
+					return INPUT_FAILURE;
 			}
-
+			exp_char[exp_digits] = '\0';
+			printf("%s\n", exp_char);
+			printf("%d\n", atoi(exp_char));
 			src_float->exponent = exp_sign * atoi(exp_char) + exp_add;
 			if (significant_digits == 0)
 			{
