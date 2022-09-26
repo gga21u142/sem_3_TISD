@@ -19,7 +19,7 @@ void print_number_t(number_t *number)
 
 void print_answer_t(answer_t *answer)
 {
-	printf("\nРезультат умножения : %c0.", answer->sign);
+	printf("%c0.", answer->sign);
 
 	size_t start = 0;
 	for (size_t i = 0; answer->significant[i] != -1; i++)
