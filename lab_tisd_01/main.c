@@ -173,11 +173,13 @@ int input_float_t(float_t *src_float)
 
 			int exp_sign = 1;
 			int exp_digits = 0;
-			int digit_flag = 0;
 			char exp_char[M_EXPONENT];
 
 			if (scanf("%c", &temp) != 1 || temp == '\n')
 				return INPUT_FAILURE;
+			while (temp == ' ')
+				if (scanf("%c", &temp) != 1 || temp == '\n')
+					return INPUT_FAILURE;
 
 			if (temp == '-')
 				exp_sign = -1;
@@ -185,9 +187,8 @@ int input_float_t(float_t *src_float)
 			{	
 				if (temp != '0')
 				{	
-					digit_flag = 1;
 					exp_digits++;
-					exp_char[exp_digits - 1] = (temp - '0');
+					exp_char[exp_digits - 1] = temp;
 				}
 			}
 			else if (temp != ' ' && temp != '+')
@@ -202,20 +203,20 @@ int input_float_t(float_t *src_float)
 					return INPUT_FAILURE;
 				if (isdigit(temp))
 				{
-					if (temp == '0' && digit_flag)
+					if (temp == '0' && exp_digits != 0)
 					{
 						exp_digits++;
 						exp_char[exp_digits - 1] = '0';
 					}
 					else
 					{
-						digit_flag = 1;
 						exp_digits++;
-						exp_char[exp_digits - 1] = (temp - '0');
+						exp_char[exp_digits - 1] = temp;
 					}
 				}
 				else if (temp != ' ')
 					return INPUT_FAILURE;
+
 				if (scanf("%c", &temp) != 1)
 					return INPUT_FAILURE;
 			}
