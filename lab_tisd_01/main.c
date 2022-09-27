@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 	if (multi_error != 0)
 	{
 		if (argc == 2 && ! strcmp(argv[1], "menu"))
-			printf("Операция умножения не удалась!\n");
+			printf("\nОперация умножения не удалась!\n");
 		return multi_error;
 	}
 	if (argc == 2 && ! strcmp(argv[1], "menu"))

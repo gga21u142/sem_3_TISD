@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "process.h"
+#include "prints.h"
 
 int input_integer(number_t *src_integer)
 {
@@ -283,7 +284,7 @@ int multiply_integer_float(number_t *src_integer, number_t *src_float, answer_t 
 			dst_answer->significant[M_SIGNIFICANT * 2 - i - j + 1] = temp_calc % 10;
 			shift = temp_calc / 10;
 		}
-		dst_answer->significant[M_SIGNIFICANT * 2 - i - float_lenght + 1] = shift;
+			dst_answer->significant[M_SIGNIFICANT * 2 - i - float_lenght + 1] = shift;
 		shift = 0;
 	}
 	dst_answer->significant[M_SIGNIFICANT * 2 - int_lenght - float_lenght + 1] = -1;
@@ -293,7 +294,14 @@ int multiply_integer_float(number_t *src_integer, number_t *src_float, answer_t 
 	size_t start = 0;
 	for (size_t i = 0; dst_answer->significant[i] != -1; i++)
 		start++;
-
+	
+	for (size_t i = start + 1; dst_answer->significant[i] == 0; i++)
+	{
+		dst_answer->exponent -= 1;
+		dst_answer->significant[i - 1] = 0;
+		dst_answer->significant[i] = -1;
+	}
+	
 	for (size_t i = start + 1; dst_answer->significant[i] != -1; i++)
 		if (i - start == 30 && dst_answer->significant[i + 1] != -1)
 		{
