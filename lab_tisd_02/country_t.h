@@ -54,8 +54,12 @@ typedef struct
 
 
 int read_countries(FILE *fsrc, int *volume, country_t *country_arr, continent_sort *keys_arr);
-int print_countries(int volume, country_t *countries_arr);
+void print_countries(int volume, country_t *countries_arr);
 int add_country(FILE* fsrc);
+void sort_main_table(int volume, country_t *countries_arr);
+void sort_keys_table(int volume, continent_sort *keys_arr);
+void print_key_table(int volume, continent_sort *keys_arr);
+void print_main_table_by_keys(int volume, country_t *countries_arr, continent_sort *keys_arr);
 
 
 #endif //__COUNTRY_T_H__

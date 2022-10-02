@@ -41,11 +41,7 @@ int main(int argc, char **argv)
 			return FILE_ERROR;
 		}		
 
-		if (print_countries(volume, countries_arr) != EXIT_SUCCESS)
-		{	
-			printf("File is damaged!\n");
-			return FILE_ERROR;
-		}
+		print_countries(volume, countries_arr);
 	}
  
 	else if (! strcmp(argv[2], "add"))
@@ -68,14 +64,84 @@ int main(int argc, char **argv)
 	{
 
 	}
-
+*/
 	else if (! strcmp(argv[2], "sort"))
 	{
+		fsrc = fopen(argv[1], "r");
+		if (fsrc == NULL)
+		{
+			printf("Could not open %s because of %s\n", argv[2], strerror(errno));
+			return FILE_ERROR;
+		}
+
+		country_t countries_arr[M_COUNTRIES];
+		continent_sort keys_arr[M_COUNTRIES];
+		int volume = 0;
+
+		if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
+		{	
+			printf("File is empty or damaged!\n");
+			return FILE_ERROR;
+		}	
+
+
 		char sort_type[10];
 		printf("Choose what to sort main table or keys table (input main or key): ");
+		if (scanf("%s", sort_type) != 1)
+		{
+			printf("Wrong sort type!\n");
+			return EXIT_FAILURE;
+		}
 
+		if (! strcmp(sort_type, "main"))
+		{
+			sort_main_table(volume, countries_arr);
+			printf("Main table was sorted!\n");
+			printf("Do you want to print the main table? Input y or n: ");
+			char print_choice;
+			scanf("\n%c", &print_choice);
+			if (print_choice == 'y')
+				print_countries(volume, countries_arr);
+			else if (print_choice != 'n')
+			{
+				printf("Wrong input!\n");
+				return EXIT_FAILURE;
+			}
+		}
+
+		else if (! strcmp(sort_type, "key"))
+		{
+			sort_keys_table(volume, keys_arr);
+			printf("Keys table was sorted!\n");
+			printf("Do you want to print the keys table? Input y or n: ");
+			char print_choice;
+			scanf("\n%c", &print_choice);
+			if (print_choice == 'y')
+				print_key_table(volume, keys_arr);
+			else if (print_choice != 'n')
+			{
+				printf("Wrong input!\n");
+				return EXIT_FAILURE;
+			}
+
+			printf("Do you want to print sorted main table? Input y or n: ");
+			scanf("\n%c", &print_choice);
+			if (print_choice == 'y')
+				print_main_table_by_keys(volume, countries_arr, keys_arr);
+			else if (print_choice != 'n')
+			{
+				printf("Wrong input!\n");
+				return EXIT_FAILURE;
+			}
+		}
+
+		else
+		{
+			printf("Wrong sort type!\n");
+			return EXIT_FAILURE;
+		}
 	}
-*/
+
 	else
 	{
 		printf("Wrong mode argument!\n");

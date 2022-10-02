@@ -74,25 +74,23 @@ int read_countries(FILE *fsrc, int *volume, country_t *country_arr, continent_so
 	return EXIT_SUCCESS;
 }
 
-int print_countries(int volume, country_t *countries_arr)
+void print_country_t(country_t *country)
+{
+	printf("%s %d %s %s %d %s ", country->country_name, country->population, country->capital_name, country->continent_name, country->vaccine_need, country->main_tourism);
+	if ( ! strcmp(country->main_tourism, "tour"))
+		printf("%d %s\n", country->tourism_info.tour.objects_count, country->tourism_info.tour.tour_type);
+
+	else if ( ! strcmp(country->main_tourism, "beach"))
+		printf("%s %d %d %d\n", country->tourism_info.beach.main_season, country->tourism_info.beach.air_temperature, country->tourism_info.beach.water_temperature, country->tourism_info.beach.flight_time);
+	
+	else if ( ! strcmp(country->main_tourism, "sport"))
+		printf("%s %d\n", country->tourism_info.sport.sport_type, country->tourism_info.sport.min_cost);
+}
+
+void print_countries(int volume, country_t *countries_arr)
 {
 	for (int i = 0; i < volume; i++)
-	{	
-		const country_t *ptr = &countries_arr[i];
-		printf("%s %d %s %s %d %s ", ptr->country_name, ptr->population, ptr->capital_name, ptr->continent_name, ptr->vaccine_need, ptr->main_tourism);
-		if ( ! strcmp(ptr->main_tourism, "tour"))
-			printf("%d %s\n", ptr->tourism_info.tour.objects_count, ptr->tourism_info.tour.tour_type);
-
-		else if ( ! strcmp(ptr->main_tourism, "beach"))
-			printf("%s %d %d %d\n", ptr->tourism_info.beach.main_season, ptr->tourism_info.beach.air_temperature, ptr->tourism_info.beach.water_temperature, ptr->tourism_info.beach.flight_time);
-
-		else if ( ! strcmp(ptr->main_tourism, "sport"))
-			printf("%s %d\n", ptr->tourism_info.sport.sport_type, ptr->tourism_info.sport.min_cost);
-
-		else
-			return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
+		print_country_t(&countries_arr[i]);
 }
 
 int add_country(FILE* fsrc)
@@ -241,4 +239,103 @@ int add_country(FILE* fsrc)
 	return EXIT_SUCCESS;
 }
 
+void country_copy(country_t *record_dst, country_t *record_src)
+{
+	strcpy(record_dst->country_name, record_src->country_name);
+	record_dst->population = record_src->population;
+	strcpy(record_dst->capital_name, record_src->capital_name);
+	strcpy(record_dst->continent_name, record_src->continent_name);
+	record_dst->vaccine_need = record_src->vaccine_need;
+
+	if (! strcmp(record_src->main_tourism, "tour"))
+	{
+		record_dst->tourism_info.tour.objects_count = record_src->tourism_info.tour.objects_count;
+		strcpy(record_dst->tourism_info.tour.tour_type, record_src->tourism_info.tour.tour_type);
+	}
+	else if (! strcmp(record_src->main_tourism, "beach"))
+	{
+		strcpy(record_dst->tourism_info.beach.main_season, record_src->tourism_info.beach.main_season);
+		record_dst->tourism_info.beach.air_temperature = record_src->tourism_info.beach.air_temperature;
+		record_dst->tourism_info.beach.water_temperature = record_src->tourism_info.beach.water_temperature;
+		record_dst->tourism_info.beach.flight_time = record_src->tourism_info.beach.flight_time;
+	}
+	else if (! strcmp(record_src->main_tourism, "sport"))
+	{		
+		strcpy(record_dst->tourism_info.sport.sport_type, record_src->tourism_info.sport.sport_type);
+		record_dst->tourism_info.sport.min_cost = record_src->tourism_info.sport.min_cost;
+	}
+	strcpy(record_dst->main_tourism, record_src->main_tourism);
+}
+
+void swap_country_main_table(country_t *record_1, country_t *record_2)
+{
+	country_t temp_record;
+
+	country_copy(&temp_record, record_1);
+	country_copy(record_1, record_2);
+	country_copy(record_2, &temp_record);
+}
+
+void sort_main_table(int volume, country_t *countries_arr)
+{
+	for (int i = 0; i < volume; i++)
+	{
+		size_t flag = 1;
+		for (int j = 0; j < volume - i - 1; j++)
+		{
+			if (strcmp(countries_arr[j].continent_name, countries_arr[j + 1].continent_name) > 0)
+			{
+				swap_country_main_table(&countries_arr[j], &countries_arr[j + 1]);
+				flag = 0;
+			}
+		}
+		if (flag)
+			break;
+	}
+}
+
+
+void swap_keys_table(continent_sort *key_1, continent_sort *key_2)
+{
+	continent_sort temp_key;
+
+	temp_key.src_index = key_1->src_index;
+	strcpy(temp_key.continent_name, key_1->continent_name);
+
+	key_1->src_index = key_2->src_index;
+	strcpy(key_1->continent_name, key_2->continent_name);
+
+	key_2->src_index = temp_key.src_index;
+	strcpy(key_2->continent_name, temp_key.continent_name);
+}
+
+void sort_keys_table(int volume, continent_sort *keys_arr)
+{
+	for (int i = 0; i < volume; i++)
+	{
+		size_t flag = 1;
+		for (int j = 0; j < volume - i - 1; j++)
+		{
+			if (strcmp(keys_arr[j].continent_name, keys_arr[j + 1].continent_name) > 0)
+			{
+				swap_keys_table(&keys_arr[j], &keys_arr[j + 1]);
+				flag = 0;
+			}
+		}
+		if (flag)
+			break;
+	}
+}
+
+void print_key_table(int volume, continent_sort *keys_arr)
+{
+	for (int i = 0; i < volume; i++)
+		printf("%d %s\n", keys_arr[i].src_index, keys_arr[i].continent_name);
+}
+
+void print_main_table_by_keys(int volume, country_t *countries_arr, continent_sort *keys_arr)
+{
+	for (int i = 0; i < volume; i++)
+		print_country_t(&countries_arr[keys_arr[i].src_index]);
+}
 
