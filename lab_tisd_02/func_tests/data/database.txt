@@ -64,3 +64,5 @@ El_Salvador 1530694329 New_York South_America 1 tour 725 history
 Austria 846177699 Oklahoma_City North_America 1 sport surfing 130098
 Romania 966248214 Escondido Asia 1 tour 1159 history
 Guyana 1567381766 Philadelphia Europe 0 beach spring 28 13 611
+Italy 2000000 Rome Europe 1 tour 465 historic
+Japan 600000000 Tokyo Asia 1 tour 700 historic

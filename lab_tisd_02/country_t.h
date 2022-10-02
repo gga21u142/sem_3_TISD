@@ -2,11 +2,11 @@
 #define __COUNTRY_T_H__
 
 #define M_COUNTRIES 100
-#define M_COUNTRY 30
-#define M_CAPITAL 30
-#define M_CONTINENT 30
-#define M_TOURISM 10
-#define M_SUBINFO 20
+#define M_COUNTRY 30 + 2
+#define M_CAPITAL 30 + 2
+#define M_CONTINENT 30 + 2
+#define M_TOURISM 10 + 2
+#define M_SUBINFO 20 + 2
 
 typedef struct tourism_tour_n
 {
@@ -55,5 +55,7 @@ typedef struct
 
 int read_countries(FILE *fsrc, int *volume, country_t *country_arr, continent_sort *keys_arr);
 int print_countries(int volume, country_t *countries_arr);
+int add_country(FILE* fsrc);
+
 
 #endif //__COUNTRY_T_H__
