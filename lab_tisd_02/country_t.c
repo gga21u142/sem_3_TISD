@@ -93,6 +93,19 @@ void print_countries(int volume, country_t *countries_arr)
 		print_country_t(&countries_arr[i]);
 }
 
+void fprintf_country(FILE* fsrc, char* country_name, int population, char* capital_name, char* continent_name, int vaccine_need, char* main_tourism, char* sub_info_s, int sub_info_d1, int sub_info_d2, int sub_info_d3)
+{
+	fprintf(fsrc, "%s %d %s %s %d %s ", country_name, population, capital_name, continent_name, vaccine_need, main_tourism);
+	if ( ! strcmp(main_tourism, "tour"))
+		fprintf(fsrc, "%d %s\n", sub_info_d1, sub_info_s);
+
+	else if ( ! strcmp(main_tourism, "beach"))
+		fprintf(fsrc, "%s %d %d %d\n", sub_info_s, sub_info_d1, sub_info_d2, sub_info_d3);
+
+	else if ( ! strcmp(main_tourism, "sport"))
+		fprintf(fsrc, "%s %d\n", sub_info_s, sub_info_d1);
+}
+
 int add_country(FILE* fsrc)
 {
 	char country_name [M_COUNTRY];
@@ -103,9 +116,9 @@ int add_country(FILE* fsrc)
 	char main_tourism [M_TOURISM];
 
 	char sub_info_s [M_SUBINFO];
-	int sub_info_d1;
-	int sub_info_d2;
-	int sub_info_d3;
+	int sub_info_d1 = -1;
+	int sub_info_d2 = -1;
+	int sub_info_d3 = -1;
 
 	printf("Input country name (if theres space in name put '_' instead: ");
 	if (scanf("%s", country_name) != 1 || strlen(country_name) > M_COUNTRY - 2)
@@ -225,16 +238,7 @@ int add_country(FILE* fsrc)
 		return EXIT_FAILURE;
 	}
 
-
-	fprintf(fsrc, "%s %d %s %s %d %s ", country_name, population, capital_name, continent_name, vaccine_need, main_tourism);
-	if ( ! strcmp(main_tourism, "tour"))
-		fprintf(fsrc, "%d %s\n", sub_info_d1, sub_info_s);
-
-	else if ( ! strcmp(main_tourism, "beach"))
-		fprintf(fsrc, "%s %d %d %d\n", sub_info_s, sub_info_d1, sub_info_d2, sub_info_d3);
-
-	else if ( ! strcmp(main_tourism, "sport"))
-		fprintf(fsrc, "%s %d\n", sub_info_s, sub_info_d1);
+	fprintf_country(fsrc, country_name, population, capital_name, continent_name, vaccine_need, main_tourism, sub_info_s, sub_info_d1, sub_info_d2, sub_info_d3);
 	
 	return EXIT_SUCCESS;
 }
@@ -339,3 +343,54 @@ void print_main_table_by_keys(int volume, country_t *countries_arr, continent_so
 		print_country_t(&countries_arr[keys_arr[i].src_index]);
 }
 
+
+int continent_cmp(const void *arg1, const void *arg2)
+{
+	country_t * temp1 = (country_t *)arg1;
+	country_t * temp2 = (country_t *)arg2;
+	return strcmp(temp1->continent_name, temp2->continent_name);
+}
+
+int continent_key_cmp(const void *arg1, const void *arg2)
+{
+	continent_sort * temp1 = (continent_sort *)arg1;
+	continent_sort * temp2 = (continent_sort *)arg2;
+	return strcmp(temp1->continent_name, temp2->continent_name);
+}
+
+
+
+void delete_countries_by_cont(FILE *fsrc, int volume, country_t *countries_arr, char *continent_del)
+{
+	country_t *ptr;
+	char sub_info_s [M_SUBINFO];
+	int sub_info_d1 = -1;
+	int sub_info_d2 = -1;
+	int sub_info_d3 = -1;
+	for (int i = 0; i < volume; i++)
+	{
+		ptr = &countries_arr[i];
+		if ( ! strcmp(ptr->main_tourism, "tour"))
+		{
+			sub_info_d1 = ptr->tourism_info.tour.objects_count;
+			strcpy(sub_info_s, ptr->tourism_info.tour.tour_type);
+		}
+
+		else if ( ! strcmp(ptr->main_tourism, "beach"))
+		{
+			strcpy(sub_info_s, ptr->tourism_info.beach.main_season);
+			sub_info_d1 = ptr->tourism_info.beach.air_temperature;
+			sub_info_d2 = ptr->tourism_info.beach.water_temperature;
+			sub_info_d3 = ptr->tourism_info.beach.flight_time;
+		}
+
+		else if ( ! strcmp(ptr->main_tourism, "sport"))
+		{
+			strcpy(sub_info_s, ptr->tourism_info.sport.sport_type);
+			sub_info_d1 = ptr->tourism_info.sport.min_cost;
+		}
+
+		if (strcmp(ptr->continent_name, continent_del))
+			fprintf_country(fsrc, ptr->country_name, ptr->population, ptr->capital_name, ptr->continent_name, ptr->vaccine_need, ptr->main_tourism, sub_info_s, sub_info_d1, sub_info_d2, sub_info_d3);
+	}
+}
