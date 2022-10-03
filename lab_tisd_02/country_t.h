@@ -54,7 +54,7 @@ typedef struct
 	char country_name[M_COUNTRY];
 } country_sort;
 
-#define country_sort_SIZE sizeof(country_sort)
+#define COUNTRY_SORT_SIZE sizeof(country_sort)
 
 int read_countries(FILE *fsrc, int *volume, country_t *country_arr, country_sort *keys_arr);
 void print_countries(int volume, country_t *countries_arr);

@@ -182,7 +182,7 @@ int main(int argc, char **argv)
 			if (choice == 's')
 				sort_keys_table(volume, keys_arr);
 			else if (choice == 'q')
-				qsort(keys_arr, volume, country_sort_SIZE, country_key_cmp);
+				qsort(keys_arr, volume, COUNTRY_SORT_SIZE, country_key_cmp);
 			else
 			{
 				printf("Wrong input!\n");
