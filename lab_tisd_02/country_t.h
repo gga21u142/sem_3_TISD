@@ -2,11 +2,11 @@
 #define __COUNTRY_T_H__
 
 #define M_COUNTRIES 100
-#define M_COUNTRY 30 + 2
-#define M_CAPITAL 30 + 2
-#define M_CONTINENT 20 + 2
-#define M_TOURISM 10 + 2
-#define M_SUBINFO 20 + 2
+#define M_COUNTRY 30 + 1
+#define M_CAPITAL 30 + 1
+#define M_CONTINENT 20 + 1
+#define M_TOURISM 10 + 1
+#define M_SUBINFO 20 + 1
 
 typedef struct tourism_tour_n
 {
@@ -51,20 +51,22 @@ typedef struct
 typedef struct
 {
 	int src_index;
-	char continent_name[M_CONTINENT];
-} continent_sort;
+	char country_name[M_COUNTRY];
+} country_sort;
 
-#define CONTINENT_SORT_SIZE sizeof(continent_sort)
+#define country_sort_SIZE sizeof(country_sort)
 
-int read_countries(FILE *fsrc, int *volume, country_t *country_arr, continent_sort *keys_arr);
+int read_countries(FILE *fsrc, int *volume, country_t *country_arr, country_sort *keys_arr);
 void print_countries(int volume, country_t *countries_arr);
 int add_country(FILE* fsrc);
 void sort_main_table(int volume, country_t *countries_arr);
-void sort_keys_table(int volume, continent_sort *keys_arr);
-void print_key_table(int volume, continent_sort *keys_arr);
-void print_main_table_by_keys(int volume, country_t *countries_arr, continent_sort *keys_arr);
-int continent_cmp(const void *arg1, const void *arg2);
-int continent_key_cmp(const void *arg1, const void *arg2);
-void delete_countries_by_cont(FILE *fsrc, int volume, country_t *countries_arr, char *continent_del);
+void sort_keys_table(int volume, country_sort *keys_arr);
+void print_key_table(int volume, country_sort *keys_arr);
+void print_main_table_by_keys(int volume, country_t *countries_arr, country_sort *keys_arr);
+int country_cmp(const void *arg1, const void *arg2);
+int country_key_cmp(const void *arg1, const void *arg2);
+void delete_country(FILE *fsrc, int volume, country_t *countries_arr, char *cont_del, char *sport_del);
+void print_match_countries(int volume, country_t *countries_arr, char *continent_search, char *sport_search);
+
 
 #endif //__COUNTRY_T_H__

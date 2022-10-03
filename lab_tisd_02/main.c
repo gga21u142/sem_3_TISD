@@ -32,12 +32,13 @@ int main(int argc, char **argv)
 		}
 
 		country_t countries_arr[M_COUNTRIES];
-		continent_sort keys_arr[M_COUNTRIES];
+		country_sort keys_arr[M_COUNTRIES];
 		int volume = 0;
 
 		if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
 		{	
 			printf("File is empty or damaged!\n");
+			fclose(fsrc);
 			return FILE_ERROR;
 		}		
 
@@ -56,6 +57,7 @@ int main(int argc, char **argv)
 		if (add_country(fsrc) != EXIT_SUCCESS)
 		{	
 			printf("Input record is not as it intended to be!\n");
+			fclose(fsrc);
 			return INPUT_ERROR;
 		}
 	}
@@ -70,32 +72,45 @@ int main(int argc, char **argv)
 		}
 
 		country_t countries_arr[M_COUNTRIES];
-		continent_sort keys_arr[M_COUNTRIES];
+		country_sort keys_arr[M_COUNTRIES];
 		int volume = 0;
 
 		if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
 		{	
 			printf("File is empty or damaged!\n");
+			fclose(fsrc);
 			return FILE_ERROR;
 		}
 		fclose(fsrc);
-		printf("You can delete all countries by continent, to proceed type one of these names \n'Africa', 'Asia', 'Australia', 'Europe', 'North_America' or 'South_America' : ");
-		char continent_delete[M_CONTINENT];
-		if (scanf("%s", continent_delete) != 1)
+
+		char continent_search[M_CONTINENT];
+		char sport_search[M_TOURISM];
+		printf("You can delete countries by continent and sports type, to proceed type one of continents names \n'Africa', 'Asia', 'Australia', 'Europe', 'North_America' or 'South_America' : ");
+		if (scanf("%s", continent_search) != 1)
 		{
-			printf("Wrong continent name!\n");
+			printf("Empty input or wrong name!\n");
 			return EXIT_FAILURE;
 		}
 
-		if (! strcmp(continent_delete, "Africa") || ! strcmp(continent_delete, "Asia") || ! strcmp(continent_delete, "Australia") || ! strcmp(continent_delete, "Europe") || ! strcmp(continent_delete, "North_America") || ! strcmp(continent_delete, "South_America"))
+		printf("Input one of sports types 'skiing', 'climbing' or 'surfing' : ");
+		if (scanf("%s", sport_search) != 1)
 		{
-			fsrc = fopen(argv[1], "w");
-			delete_countries_by_cont(fsrc, volume, countries_arr, continent_delete);
-			printf("Countries was deleted!\n");
+			printf("Empty input or wrong type!\n");
+			return EXIT_FAILURE;
+		}
+
+		if (! strcmp(continent_search, "Africa") || ! strcmp(continent_search, "Asia") || ! strcmp(continent_search, "Australia") || ! strcmp(continent_search, "Europe") || ! strcmp(continent_search, "North_America") || ! strcmp(continent_search, "South_America"))
+		{
+			if (! strcmp(sport_search, "skiing") || ! strcmp(sport_search, "climbing") || ! strcmp(sport_search, "surfing"))
+			{
+				fsrc = fopen(argv[1], "w");
+				delete_country(fsrc, volume, countries_arr, continent_search, sport_search);
+				printf("Countries was deleted!\n");
+			}
 		}
 		else
 		{
-			printf("Wrong continent name!\n");
+			printf("Wrong continent name or sport type!\n");
 			return EXIT_FAILURE;
 		}
 	}
@@ -110,12 +125,13 @@ int main(int argc, char **argv)
 		}
 
 		country_t countries_arr[M_COUNTRIES];
-		continent_sort keys_arr[M_COUNTRIES];
+		country_sort keys_arr[M_COUNTRIES];
 		int volume = 0;
 
 		if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
 		{	
 			printf("File is empty or damaged!\n");
+			fclose(fsrc);
 			return FILE_ERROR;
 		}	
 
@@ -125,6 +141,7 @@ int main(int argc, char **argv)
 		if (scanf("%s", sort_type) != 1)
 		{
 			printf("Wrong sort type!\n");
+			fclose(fsrc);
 			return EXIT_FAILURE;
 		}
 
@@ -136,10 +153,11 @@ int main(int argc, char **argv)
 			if (choice == 's')
 				sort_main_table(volume, countries_arr);
 			else if (choice == 'q')
-				qsort(countries_arr, volume, COUNTRY_T_SIZE, continent_cmp);
+				qsort(countries_arr, volume, COUNTRY_T_SIZE, country_cmp);
 			else
 			{
 				printf("Wrong input!\n");
+				fclose(fsrc);
 				return EXIT_FAILURE;
 			}
 
@@ -151,6 +169,7 @@ int main(int argc, char **argv)
 			else if (choice != 'n')
 			{
 				printf("Wrong input!\n");
+				fclose(fsrc);
 				return EXIT_FAILURE;
 			}
 		}
@@ -163,10 +182,11 @@ int main(int argc, char **argv)
 			if (choice == 's')
 				sort_keys_table(volume, keys_arr);
 			else if (choice == 'q')
-				qsort(keys_arr, volume, CONTINENT_SORT_SIZE, continent_key_cmp);
+				qsort(keys_arr, volume, country_sort_SIZE, country_key_cmp);
 			else
 			{
 				printf("Wrong input!\n");
+				fclose(fsrc);
 				return EXIT_FAILURE;
 			}
 
@@ -179,6 +199,7 @@ int main(int argc, char **argv)
 			else if (choice != 'n')
 			{
 				printf("Wrong input!\n");
+				fclose(fsrc);
 				return EXIT_FAILURE;
 			}
 
@@ -189,6 +210,7 @@ int main(int argc, char **argv)
 			else if (choice != 'n')
 			{
 				printf("Wrong input!\n");
+				fclose(fsrc);
 				return EXIT_FAILURE;
 			}
 		}
@@ -196,10 +218,63 @@ int main(int argc, char **argv)
 		else
 		{
 			printf("Wrong sort type!\n");
+			fclose(fsrc);
 			return EXIT_FAILURE;
 		}
 	}
 
+	else if (! strcmp(argv[2], "search"))
+	{
+		fsrc = fopen(argv[1], "r");
+		if (fsrc == NULL)
+		{
+			printf("Could not open %s because of %s\n", argv[2], strerror(errno));
+			return FILE_ERROR;
+		}
+
+		country_t countries_arr[M_COUNTRIES];
+		country_sort keys_arr[M_COUNTRIES];
+		int volume = 0;
+
+		if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
+		{	
+			printf("File is empty or damaged!\n");
+			fclose(fsrc);
+			return FILE_ERROR;
+		}		
+
+		char continent_search[M_CONTINENT];
+		char sport_search[M_TOURISM];
+		printf("You can search countries by continent and sports type, to proceed type one of continents names \n'Africa', 'Asia', 'Australia', 'Europe', 'North_America' or 'South_America' : ");
+		if (scanf("%s", continent_search) != 1)
+		{
+			printf("Empty input or wrong name!\n");
+			fclose(fsrc);
+			return EXIT_FAILURE;
+		}
+
+		printf("Input one of sports types 'skiing', 'climbing' or 'surfing' : ");
+		if (scanf("%s", sport_search) != 1)
+		{
+			printf("Empty input or wrong type!\n");
+			fclose(fsrc);
+			return EXIT_FAILURE;
+		}
+
+		if (! strcmp(continent_search, "Africa") || ! strcmp(continent_search, "Asia") || ! strcmp(continent_search, "Australia") || ! strcmp(continent_search, "Europe") || ! strcmp(continent_search, "North_America") || ! strcmp(continent_search, "South_America"))
+		{
+			if (! strcmp(sport_search, "skiing") || ! strcmp(sport_search, "climbing") || ! strcmp(sport_search, "surfing"))
+				print_match_countries(volume, countries_arr, continent_search, sport_search);
+		}
+		else
+		{
+			printf("Wrong continent name or sport type!\n");
+			fclose(fsrc);
+			return EXIT_FAILURE;
+		}
+
+	}
+	
 	else
 	{
 		printf("Wrong mode argument!\n");

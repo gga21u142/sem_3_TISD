@@ -8,7 +8,7 @@
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
-int read_countries(FILE *fsrc, int *volume, country_t *country_arr, continent_sort *keys_arr)
+int read_countries(FILE *fsrc, int *volume, country_t *country_arr, country_sort *keys_arr)
 {
 	int temp_err = 0;
 	char country_name [M_COUNTRY];
@@ -61,7 +61,7 @@ int read_countries(FILE *fsrc, int *volume, country_t *country_arr, continent_so
 		strcpy(country_arr[*volume].main_tourism, main_tourism);
 
 		keys_arr[*volume].src_index = *volume;
-		strcpy(keys_arr[*volume].continent_name, continent_name);
+		strcpy(keys_arr[*volume].country_name, country_name);
 	
 		(*volume)++;
 
@@ -299,28 +299,28 @@ void sort_main_table(int volume, country_t *countries_arr)
 }
 
 
-void swap_keys_table(continent_sort *key_1, continent_sort *key_2)
+void swap_keys_table(country_sort *key_1, country_sort *key_2)
 {
-	continent_sort temp_key;
+	country_sort temp_key;
 
 	temp_key.src_index = key_1->src_index;
-	strcpy(temp_key.continent_name, key_1->continent_name);
+	strcpy(temp_key.country_name, key_1->country_name);
 
 	key_1->src_index = key_2->src_index;
-	strcpy(key_1->continent_name, key_2->continent_name);
+	strcpy(key_1->country_name, key_2->country_name);
 
 	key_2->src_index = temp_key.src_index;
-	strcpy(key_2->continent_name, temp_key.continent_name);
+	strcpy(key_2->country_name, temp_key.country_name);
 }
 
-void sort_keys_table(int volume, continent_sort *keys_arr)
+void sort_keys_table(int volume, country_sort *keys_arr)
 {
 	for (int i = 0; i < volume; i++)
 	{
 		size_t flag = 1;
 		for (int j = 0; j < volume - i - 1; j++)
 		{
-			if (strcmp(keys_arr[j].continent_name, keys_arr[j + 1].continent_name) > 0)
+			if (strcmp(keys_arr[j].country_name, keys_arr[j + 1].country_name) > 0)
 			{
 				swap_keys_table(&keys_arr[j], &keys_arr[j + 1]);
 				flag = 0;
@@ -331,36 +331,36 @@ void sort_keys_table(int volume, continent_sort *keys_arr)
 	}
 }
 
-void print_key_table(int volume, continent_sort *keys_arr)
+void print_key_table(int volume, country_sort *keys_arr)
 {
 	for (int i = 0; i < volume; i++)
-		printf("%d %s\n", keys_arr[i].src_index, keys_arr[i].continent_name);
+		printf("%d %s\n", keys_arr[i].src_index, keys_arr[i].country_name);
 }
 
-void print_main_table_by_keys(int volume, country_t *countries_arr, continent_sort *keys_arr)
+void print_main_table_by_keys(int volume, country_t *countries_arr, country_sort *keys_arr)
 {
 	for (int i = 0; i < volume; i++)
 		print_country_t(&countries_arr[keys_arr[i].src_index]);
 }
 
 
-int continent_cmp(const void *arg1, const void *arg2)
+int country_cmp(const void *arg1, const void *arg2)
 {
 	country_t * temp1 = (country_t *)arg1;
 	country_t * temp2 = (country_t *)arg2;
-	return strcmp(temp1->continent_name, temp2->continent_name);
+	return strcmp(temp1->country_name, temp2->country_name);
 }
 
-int continent_key_cmp(const void *arg1, const void *arg2)
+int country_key_cmp(const void *arg1, const void *arg2)
 {
-	continent_sort * temp1 = (continent_sort *)arg1;
-	continent_sort * temp2 = (continent_sort *)arg2;
-	return strcmp(temp1->continent_name, temp2->continent_name);
+	country_sort * temp1 = (country_sort *)arg1;
+	country_sort * temp2 = (country_sort *)arg2;
+	return strcmp(temp1->country_name, temp2->country_name);
 }
 
 
 
-void delete_countries_by_cont(FILE *fsrc, int volume, country_t *countries_arr, char *continent_del)
+void delete_country(FILE *fsrc, int volume, country_t *countries_arr, char *cont_del, char *sport_del)
 {
 	country_t *ptr;
 	char sub_info_s [M_SUBINFO];
@@ -370,27 +370,38 @@ void delete_countries_by_cont(FILE *fsrc, int volume, country_t *countries_arr, 
 	for (int i = 0; i < volume; i++)
 	{
 		ptr = &countries_arr[i];
-		if ( ! strcmp(ptr->main_tourism, "tour"))
+		if (! (! strcmp(countries_arr[i].continent_name, cont_del) && ! strcmp(countries_arr[i].main_tourism, "sport") && ! strcmp(countries_arr[i].tourism_info.sport.sport_type, sport_del)))
 		{
-			sub_info_d1 = ptr->tourism_info.tour.objects_count;
-			strcpy(sub_info_s, ptr->tourism_info.tour.tour_type);
-		}
+			if ( ! strcmp(ptr->main_tourism, "tour"))
+			{
+				sub_info_d1 = ptr->tourism_info.tour.objects_count;
+				strcpy(sub_info_s, ptr->tourism_info.tour.tour_type);
+			}
 
-		else if ( ! strcmp(ptr->main_tourism, "beach"))
-		{
-			strcpy(sub_info_s, ptr->tourism_info.beach.main_season);
-			sub_info_d1 = ptr->tourism_info.beach.air_temperature;
-			sub_info_d2 = ptr->tourism_info.beach.water_temperature;
-			sub_info_d3 = ptr->tourism_info.beach.flight_time;
-		}
+			else if ( ! strcmp(ptr->main_tourism, "beach"))
+			{
+				strcpy(sub_info_s, ptr->tourism_info.beach.main_season);
+				sub_info_d1 = ptr->tourism_info.beach.air_temperature;
+				sub_info_d2 = ptr->tourism_info.beach.water_temperature;
+				sub_info_d3 = ptr->tourism_info.beach.flight_time;
+			}
 
-		else if ( ! strcmp(ptr->main_tourism, "sport"))
-		{
-			strcpy(sub_info_s, ptr->tourism_info.sport.sport_type);
-			sub_info_d1 = ptr->tourism_info.sport.min_cost;
-		}
+			else if ( ! strcmp(ptr->main_tourism, "sport"))
+			{
+				strcpy(sub_info_s, ptr->tourism_info.sport.sport_type);
+				sub_info_d1 = ptr->tourism_info.sport.min_cost;
+			}
 
-		if (strcmp(ptr->continent_name, continent_del))
 			fprintf_country(fsrc, ptr->country_name, ptr->population, ptr->capital_name, ptr->continent_name, ptr->vaccine_need, ptr->main_tourism, sub_info_s, sub_info_d1, sub_info_d2, sub_info_d3);
+		}
 	}
+}
+
+
+
+void print_match_countries(int volume, country_t *countries_arr, char *continent_search, char *sport_search)
+{
+	for (int i = 0; i < volume; i++)
+		if (! strcmp(countries_arr[i].continent_name, continent_search) && ! strcmp(countries_arr[i].main_tourism, "sport") && ! strcmp(countries_arr[i].tourism_info.sport.sport_type, sport_search))
+				print_country_t(&countries_arr[i]);
 }
