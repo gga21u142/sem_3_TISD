@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 	
 	if (argc < 3)
 	{
-		printf("Wrong amount of arguments!\n");
+		printf("Program is processing file with countries, to proceed start program with 2 arguments:\ndirectory to file and one of commands names (print - to read and print file, add - to add\ncountry to file, delete - to delete country from file, sort - to sort main or keys table or\nsearch - to search country by continent and sport type).\n");
 		return ARG_ERROR;
 	}
 
