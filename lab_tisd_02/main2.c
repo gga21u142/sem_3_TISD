@@ -54,12 +54,12 @@ int main(int argc, char **argv)
 			fclose(fsrc);
 		}
 		
-		else if (! strcmp(menu, "print") && volume != 0)
+		else if ((! strcmp(menu, "print")) && volume != 0)
 		{
 			print_countries(volume, countries_arr);
 		}
 	 
-		else if (! strcmp(menu, "add") && volume != 0)
+		else if ((! strcmp(menu, "add")) && volume != 0)
 		{
 			fsrc = fopen(argv[1], "a");
 			if (fsrc == NULL)
@@ -94,24 +94,9 @@ int main(int argc, char **argv)
 			fclose(fsrc);
 		}
 
-		else if (! strcmp(menu, "delete") && volume != 0)
+		else if ((! strcmp(menu, "delete")) && volume != 0)
 		{
-			fsrc = fopen(argv[1], "r");
-			if (fsrc == NULL)
-			{
-				printf("Could not open %s because of %s\n", menu, strerror(errno));
-				fflush(stdout);
-				return FILE_ERROR;
-			}
-
-			if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
-			{	
-				printf("File is empty or damaged!\n");
-				fflush(stdout);
-				fclose(fsrc);
-				return FILE_ERROR;
-			}
-			fclose(fsrc);
+			
 
 			char continent_search[M_CONTINENT];
 			char sport_search[M_TOURISM];
@@ -147,9 +132,26 @@ int main(int argc, char **argv)
 				printf("Wrong continent name or sport type!\n");
 				fflush(stdout);
 			}
+			
+			fsrc = fopen(argv[1], "r");
+			if (fsrc == NULL)
+			{
+				printf("Could not open %s because of %s\n", menu, strerror(errno));
+				fflush(stdout);
+				return FILE_ERROR;
+			}
+
+			if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
+			{	
+				printf("File is empty or damaged!\n");
+				fflush(stdout);
+				fclose(fsrc);
+				return FILE_ERROR;
+			}
+			fclose(fsrc);
 		}
 
-		else if (! strcmp(menu, "sort") && volume != 0)
+		else if ((! strcmp(menu, "sort")) && volume != 0)
 		{
 			
 			char sort_type[10];
@@ -245,7 +247,7 @@ int main(int argc, char **argv)
 			}
 		}
 
-		else if (! strcmp(menu, "search") && volume != 0)
+		else if ((! strcmp(menu, "search")) && volume != 0)
 		{
 
 			char continent_search[M_CONTINENT];
