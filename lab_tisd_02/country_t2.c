@@ -98,10 +98,7 @@ void print_country_t(country_t *country)
 void print_countries(int volume, country_t *countries_arr)
 {
 	for (int i = 0; i < volume; i++)
-	{
 		print_country_t(&countries_arr[i]);
-		fflush(stdout);
-	}
 }
 
 void fprintf_country(FILE* fsrc, char* country_name, int population, char* capital_name, char* continent_name, int vaccine_need, char* main_tourism, char* sub_info_s, int sub_info_d1, int sub_info_d2, int sub_info_d3)
