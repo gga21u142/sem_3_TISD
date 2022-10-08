@@ -104,22 +104,12 @@ void print_countries(int volume, country_t *countries_arr)
 void fprintf_country(FILE* fsrc, char* country_name, int population, char* capital_name, char* continent_name, int vaccine_need, char* main_tourism, char* sub_info_s, int sub_info_d1, int sub_info_d2, int sub_info_d3)
 {
 	fprintf(fsrc, "%s %d %s %s %d %s ", country_name, population, capital_name, continent_name, vaccine_need, main_tourism);
-	fflush(stdout);
 	if ( ! strcmp(main_tourism, "tour"))
-	{
 		fprintf(fsrc, "%d %s\n", sub_info_d1, sub_info_s);
-		fflush(stdout);
-	}
 	else if ( ! strcmp(main_tourism, "beach"))
-	{
 		fprintf(fsrc, "%s %d %d %d\n", sub_info_s, sub_info_d1, sub_info_d2, sub_info_d3);
-		fflush(stdout);
-	}
 	else if ( ! strcmp(main_tourism, "sport"))
-	{
 		fprintf(fsrc, "%s %d\n", sub_info_s, sub_info_d1);
-		fflush(stdout);
-	}
 }
 
 int add_country(FILE* fsrc)
@@ -388,10 +378,7 @@ void print_key_table(int volume, country_sort *keys_arr)
 void print_main_table_by_keys(int volume, country_t *countries_arr, country_sort *keys_arr)
 {
 	for (int i = 0; i < volume; i++)
-	{
 		print_country_t(&countries_arr[keys_arr[i].src_index]);
-		fflush(stdout);
-	}
 }
 
 
@@ -444,6 +431,7 @@ void delete_country(FILE *fsrc, int volume, country_t *countries_arr, char *cont
 			}
 
 			fprintf_country(fsrc, ptr->country_name, ptr->population, ptr->capital_name, ptr->continent_name, ptr->vaccine_need, ptr->main_tourism, sub_info_s, sub_info_d1, sub_info_d2, sub_info_d3);
+			fflush(fsrc);
 		}
 	}
 }

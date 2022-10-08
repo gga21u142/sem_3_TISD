@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 	char menu[10];
 	while (1)
 	{
-		printf("Input one of commands names (read - to read file, print - to read and print file, add - to add\ncountry to file, delete - to delete country from file, sort - to sort main or keys table or\nsearch - to search country by continent and sport type)");
+		printf("\nInput one of commands names (read - to read file, print - to read and print file, add - to add\ncountry to file, delete - to delete country from file, sort - to sort main or keys table or\nsearch - to search country by continent and sport type)\n");
 		fflush(stdout);
 		scanf("%s", menu);
 		if (! strcmp(menu, "read"))
@@ -76,6 +76,7 @@ int main(int argc, char **argv)
 			}
 			fclose(fsrc);
 			
+			volume = 0;
 			fsrc = fopen(argv[1], "r");
 			if (fsrc == NULL)
 			{
@@ -110,6 +111,7 @@ int main(int argc, char **argv)
 			}
 
 			printf("Input one of sports types 'skiing', 'climbing' or 'surfing' : ");
+			fflush(stdout);
 			if (scanf("%s", sport_search) != 1)
 			{
 				printf("Empty input or wrong type!\n");
@@ -133,6 +135,7 @@ int main(int argc, char **argv)
 				fflush(stdout);
 			}
 			
+			volume = 0;
 			fsrc = fopen(argv[1], "r");
 			if (fsrc == NULL)
 			{
