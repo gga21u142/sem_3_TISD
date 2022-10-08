@@ -19,6 +19,7 @@ int main(int argc, char **argv)
 	if (argc != 2)
 	{
 		printf("Program is processing file with countries, to proceed start program with directory to database.\n");
+		fflush(stdout);
 		return ARG_ERROR;
 	}
 	
@@ -29,13 +30,15 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		printf("Input one of commands names (read - to read file, print - to read and print file, add - to add\ncountry to file, delete - to delete country from file, sort - to sort main or keys table or\nsearch - to search country by continent and sport type)");
-		fscanf("%s", menu);
+		fflush(stdout);
+		scanf("%s", menu);
 		if (! strcmp(menu, "read"))
 		{
 			fsrc = fopen(argv[1], "r");
 			if (fsrc == NULL)
 			{
 				printf("Could not open %s because of %s\n", menu, strerror(errno));
+				fflush(stdout);
 				return FILE_ERROR;
 			}
 
@@ -44,6 +47,7 @@ int main(int argc, char **argv)
 			if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
 			{	
 				printf("File is empty or damaged!\n");
+				fflush(stdout);
 				fclose(fsrc);
 				return FILE_ERROR;
 			}		
@@ -61,24 +65,29 @@ int main(int argc, char **argv)
 			if (fsrc == NULL)
 			{
 				printf("Could not open %s because of %s\n", menu, strerror(errno));
+				fflush(stdout);
 				return FILE_ERROR;
 			}
 
 			if (add_country(fsrc) != EXIT_SUCCESS)
+			{
 				printf("Input record is not as it intended to be!\n");
-			
+				fflush(stdout);
+			}
 			fclose(fsrc);
 			
 			fsrc = fopen(argv[1], "r");
 			if (fsrc == NULL)
 			{
 				printf("Could not open %s because of %s\n", menu, strerror(errno));
+				fflush(stdout);
 				return FILE_ERROR;
 			}
 
 			if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
 			{	
 				printf("File is empty or damaged!\n");
+				fflush(stdout);
 				fclose(fsrc);
 				return FILE_ERROR;
 			}		
@@ -91,12 +100,14 @@ int main(int argc, char **argv)
 			if (fsrc == NULL)
 			{
 				printf("Could not open %s because of %s\n", menu, strerror(errno));
+				fflush(stdout);
 				return FILE_ERROR;
 			}
 
 			if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
 			{	
 				printf("File is empty or damaged!\n");
+				fflush(stdout);
 				fclose(fsrc);
 				return FILE_ERROR;
 			}
@@ -105,9 +116,11 @@ int main(int argc, char **argv)
 			char continent_search[M_CONTINENT];
 			char sport_search[M_TOURISM];
 			printf("You can delete countries by continent and sports type, to proceed type one of continents names \n'Africa', 'Asia', 'Australia', 'Europe', 'North_America' or 'South_America' : ");
+			fflush(stdout);
 			if (scanf("%s", continent_search) != 1)
 			{
 				printf("Empty input or wrong name!\n");
+				fflush(stdout);
 				continue;
 			}
 
@@ -115,6 +128,7 @@ int main(int argc, char **argv)
 			if (scanf("%s", sport_search) != 1)
 			{
 				printf("Empty input or wrong type!\n");
+				fflush(stdout);
 				continue;
 			}
 
@@ -125,11 +139,13 @@ int main(int argc, char **argv)
 					fsrc = fopen(argv[1], "w");
 					delete_country(fsrc, volume, countries_arr, continent_search, sport_search);
 					printf("Countries was deleted!\n");
+					fflush(stdout);
 				}
 			}
 			else
 			{
 				printf("Wrong continent name or sport type!\n");
+				fflush(stdout);
 			}
 		}
 
@@ -138,15 +154,18 @@ int main(int argc, char **argv)
 			
 			char sort_type[10];
 			printf("Choose what to sort main table or keys table (input main or key): ");
+			fflush(stdout);
 			if (scanf("%s", sort_type) != 1)
 			{
 				printf("Wrong sort type!\n");
+				fflush(stdout);
 				continue;
 			}
 
 			if (! strcmp(sort_type, "main"))
 			{
 				printf("What sort algorithm do you want? Input s for standart and q for quick: ");
+				fflush(stdout);
 				char choice;
 				scanf("\n%c", &choice);
 				if (choice == 's')
@@ -156,17 +175,20 @@ int main(int argc, char **argv)
 				else
 				{
 					printf("Wrong input!\n");
+					fflush(stdout);
 					continue;
 				}
 
 				printf("Main table was sorted!\n");
 				printf("Do you want to print the main table? Input y or n: ");
+				fflush(stdout);
 				scanf("\n%c", &choice);
 				if (choice == 'y')
 					print_countries(volume, countries_arr);
 				else if (choice != 'n')
 				{
 					printf("Wrong input!\n");
+					fflush(stdout);
 					continue;
 				}
 			}
@@ -174,6 +196,7 @@ int main(int argc, char **argv)
 			else if (! strcmp(sort_type, "key"))
 			{
 				printf("What sort algorithm do you want? Input s for standart and q for quick: ");
+				fflush(stdout);
 				char choice;
 				scanf("\n%c", &choice);
 				if (choice == 's')
@@ -183,28 +206,33 @@ int main(int argc, char **argv)
 				else
 				{
 					printf("Wrong input!\n");
+					fflush(stdout);
 					continue;
 				}
 
 				
 				printf("Keys table was sorted!\n");
 				printf("Do you want to print the keys table? Input y or n: ");
+				fflush(stdout);
 				scanf("\n%c", &choice);
 				if (choice == 'y')
 					print_key_table(volume, keys_arr);
 				else if (choice != 'n')
 				{
 					printf("Wrong input!\n");
+					fflush(stdout);
 					continue;
 				}
 
 				printf("Do you want to print sorted main table? Input y or n: ");
+				fflush(stdout);
 				scanf("\n%c", &choice);
 				if (choice == 'y')
 					print_main_table_by_keys(volume, countries_arr, keys_arr);
 				else if (choice != 'n')
 				{
 					printf("Wrong input!\n");
+					fflush(stdout);
 					continue;
 				}
 			}
@@ -212,6 +240,7 @@ int main(int argc, char **argv)
 			else
 			{
 				printf("Wrong sort type!\n");
+				fflush(stdout);
 				continue;
 			}
 		}
@@ -222,16 +251,20 @@ int main(int argc, char **argv)
 			char continent_search[M_CONTINENT];
 			char sport_search[M_TOURISM];
 			printf("You can search countries by continent and sports type, to proceed type one of continents names \n'Africa', 'Asia', 'Australia', 'Europe', 'North_America' or 'South_America' : ");
+			fflush(stdout);
 			if (scanf("%s", continent_search) != 1)
 			{
 				printf("Empty input or wrong name!\n");
+				fflush(stdout);
 				continue;
 			}
 
 			printf("Input one of sports types 'skiing', 'climbing' or 'surfing' : ");
+			fflush(stdout);
 			if (scanf("%s", sport_search) != 1)
 			{
 				printf("Empty input or wrong type!\n");
+				fflush(stdout);
 				continue;
 			}
 
@@ -243,6 +276,7 @@ int main(int argc, char **argv)
 			else
 			{
 				printf("Wrong continent name or sport type!\n");
+				fflush(stdout);
 				continue;
 			}
 
@@ -251,6 +285,7 @@ int main(int argc, char **argv)
 		else
 		{
 			printf("Wrong function name or file not readed.\n");
+			fflush(stdout);
 		}
 	}
 	
