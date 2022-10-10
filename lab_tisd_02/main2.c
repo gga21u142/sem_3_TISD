@@ -42,25 +42,8 @@ int main(int argc, char **argv)
 		
 		else if (! strcmp(menu, "read"))
 		{
-			volume = 0;
-			fsrc = fopen(argv[1], "r");
-			if (fsrc == NULL)
-			{
-				printf("Could not open %s because of %s\n", menu, strerror(errno));
-				fflush(stdout);
+			if (read_file(fsrc, &volume, countries_arr, keys_arr, argv[1]) != EXIT_SUCCESS)
 				return FILE_ERROR;
-			}
-
-
-
-			if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
-			{	
-				printf("File is empty or damaged!\n");
-				fflush(stdout);
-				fclose(fsrc);
-				return FILE_ERROR;
-			}		
-			fclose(fsrc);
 		}
 		
 		else if ((! strcmp(menu, "print")) && volume != 0)
@@ -85,23 +68,8 @@ int main(int argc, char **argv)
 			}
 			fclose(fsrc);
 			
-			volume = 0;
-			fsrc = fopen(argv[1], "r");
-			if (fsrc == NULL)
-			{
-				printf("Could not open %s because of %s\n", menu, strerror(errno));
-				fflush(stdout);
+			if (read_file(fsrc, &volume, countries_arr, keys_arr, argv[1]) != EXIT_SUCCESS)
 				return FILE_ERROR;
-			}
-
-			if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
-			{	
-				printf("File is empty or damaged!\n");
-				fflush(stdout);
-				fclose(fsrc);
-				return FILE_ERROR;
-			}		
-			fclose(fsrc);
 		}
 
 		else if ((! strcmp(menu, "delete")) && volume != 0)
@@ -150,23 +118,8 @@ int main(int argc, char **argv)
 				fflush(stdout);
 			}
 			
-			volume = 0;
-			fsrc = fopen(argv[1], "r");
-			if (fsrc == NULL)
-			{
-				printf("Could not open %s because of %s\n", menu, strerror(errno));
-				fflush(stdout);
+			if (read_file(fsrc, &volume, countries_arr, keys_arr, argv[1]) != EXIT_SUCCESS)
 				return FILE_ERROR;
-			}
-
-			if (read_countries(fsrc, &volume, countries_arr, keys_arr) != EXIT_SUCCESS)
-			{	
-				printf("File is empty or damaged!\n");
-				fflush(stdout);
-				fclose(fsrc);
-				return FILE_ERROR;
-			}
-			fclose(fsrc);
 		}
 
 		else if ((! strcmp(menu, "sort")) && volume != 0)

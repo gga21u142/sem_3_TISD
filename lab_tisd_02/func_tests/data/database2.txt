@@ -37,11 +37,9 @@ Senegal 1614921589 Boston Australia 1 sport climbing 64266
 Singapore 624129033 Norfolk Africa 1 sport skiing 197471
 Malawi 1019929072 Murfreesboro Asia 1 tour 95 history
 Mauritius 398193235 Lincoln Australia 1 beach spring -27 19 88
-Afghanistan 1285510929 Houston Asia 1 sport skiing 176602
 Bhutan 1615178775 Salem Australia 0 tour 1944 nature
 Burkina_Faso 1565632054 Reno North_America 0 sport climbing 123468
 India 302565359 Fort_Lauderdale South_America 0 tour 310 history
-South_Africa 19243675 Rochester Asia 1 sport skiing 68838
 Grenada 497018375 Denver Europe 0 beach summer 8 2 246
 Iceland 1111711521 San_Diego Africa 0 tour 1237 nature
 Uzbekistan 1896404290 Arlington Africa 1 tour 1036 history

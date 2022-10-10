@@ -8,6 +8,7 @@
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
+
 int read_countries(FILE *fsrc, int *volume, country_t *country_arr, country_sort *keys_arr)
 {
 	int temp_err = 0;
@@ -73,6 +74,32 @@ int read_countries(FILE *fsrc, int *volume, country_t *country_arr, country_sort
 
 	return EXIT_SUCCESS;
 }
+
+
+int read_file(FILE *fsrc, int *volume, country_t *country_arr, country_sort *keys_arr, char *argv)
+{
+	(*volume) = 0;
+	fsrc = fopen(argv, "r");
+	if (fsrc == NULL)
+	{
+		printf("Could not open file!\n");
+		fflush(stdout);
+		return EXIT_FAILURE;
+	}
+
+	if (read_countries(fsrc, volume, country_arr, keys_arr) != EXIT_SUCCESS)
+	{	
+		printf("File is empty or damaged!\n");
+		fflush(stdout);
+		fclose(fsrc);
+		return EXIT_FAILURE;
+	}		
+	fclose(fsrc);
+	return EXIT_SUCCESS;
+}
+
+
+
 
 void print_country_t(country_t *country)
 {
