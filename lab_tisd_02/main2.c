@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 	if (argc != 2)
 	{
 		printf("Program is processing file with countries, to proceed start program with directory to database.\n");
-		fflush(stdout);
+		
 		return ARG_ERROR;
 	}
 	
@@ -27,13 +27,22 @@ int main(int argc, char **argv)
 	country_sort keys_arr[M_COUNTRIES];
 	int volume = 0;	
 	char menu[10];
+	printf("\nInput one of commands names:\n0) menu - to show menu\n1) read - to read file\n2) print - to print file\n3) add - to add country to file\n4) delete - to delete country from file\n5) sort - to sort main or keys table\n6) search - to search country by continent and sport type)\n7) exit - to exit programm.\n");
+	fflush(stdout);
 	while (1)
 	{
-		printf("\nInput one of commands names (read - to read file, print - to read and print file, add - to add\ncountry to file, delete - to delete country from file, sort - to sort main or keys table or\nsearch - to search country by continent and sport type)\n");
+		printf("\n");
 		fflush(stdout);
 		scanf("%s", menu);
-		if (! strcmp(menu, "read"))
+		if (! strcmp(menu, "menu"))
 		{
+			printf("\nInput one of commands names:\n0) menu - to show menu\n1) read - to read file\n2) print - to print file\n3) add - to add country to file\n4) delete - to delete country from file\n5) sort - to sort main or keys table\n6) search - to search country by continent and sport type)\n7) exit - to exit programm.\n");
+			fflush(stdout);
+		}
+		
+		else if (! strcmp(menu, "read"))
+		{
+			volume = 0;
 			fsrc = fopen(argv[1], "r");
 			if (fsrc == NULL)
 			{
@@ -127,11 +136,17 @@ int main(int argc, char **argv)
 					delete_country(fsrc, volume, countries_arr, continent_search, sport_search);
 					printf("Countries was deleted!\n");
 					fflush(stdout);
+					fclose(fsrc);
+				}
+				else
+				{
+					printf("Wrong sport type!\n");
+					fflush(stdout);
 				}
 			}
 			else
 			{
-				printf("Wrong continent name or sport type!\n");
+				printf("Wrong continent name!\n");
 				fflush(stdout);
 			}
 			
@@ -277,16 +292,25 @@ int main(int argc, char **argv)
 			{
 				if (! strcmp(sport_search, "skiing") || ! strcmp(sport_search, "climbing") || ! strcmp(sport_search, "surfing"))
 					print_match_countries(volume, countries_arr, continent_search, sport_search);
+				else
+				{
+					printf("Wrong sport type!\n");
+					fflush(stdout);
+				}
 			}
 			else
 			{
-				printf("Wrong continent name or sport type!\n");
+				printf("Wrong continent name!\n");
 				fflush(stdout);
 				continue;
 			}
 
 		}
-		
+		else if (! strcmp(menu, "exit"))
+		{
+			printf("Shutting down...\n");
+			return EXIT_SUCCESS;
+		}
 		else
 		{
 			printf("Wrong function name or file not readed.\n");
