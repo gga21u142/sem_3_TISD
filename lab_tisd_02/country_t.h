@@ -68,5 +68,7 @@ int country_key_cmp(const void *arg1, const void *arg2);
 void delete_country(FILE *fsrc, int volume, country_t *countries_arr, char *cont_del, char *sport_del);
 void print_match_countries(int volume, country_t *countries_arr, char *continent_search, char *sport_search);
 int read_file(FILE *fsrc, int *volume, country_t *country_arr, country_sort *keys_arr, char *argv);
+void update_index(int volume, country_sort *keys_arr);
+
 
 #endif //__COUNTRY_T_H__

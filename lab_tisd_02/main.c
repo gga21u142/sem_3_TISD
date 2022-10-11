@@ -28,6 +28,7 @@ int main(int argc, char **argv)
 	int volume = 0;	
 	char menu[10];
 	char check;
+	int main_sorted = 0;
 	printf("\nInput one of commands names:\n0) menu - to show menu\n1) read - to read file\n2) print - to print file\n3) add - to add country to file\n4) delete - to delete country from file\n5) sort - to sort main or keys table\n6) search - to search country by continent and sport type)\n7) exit - to exit programm.\n");
 	fflush(stdout);
 	while (1)
@@ -158,6 +159,7 @@ int main(int argc, char **argv)
 						continue;
 					}
 					sort_main_table(volume, countries_arr);
+					main_sorted = 1;
 				}
 					
 				else if (choice == 'q')
@@ -170,6 +172,7 @@ int main(int argc, char **argv)
 						continue;
 					}
 					qsort(countries_arr, volume, COUNTRY_T_SIZE, country_cmp);
+					main_sorted = 1;
 				}
 					
 				else
@@ -227,6 +230,8 @@ int main(int argc, char **argv)
 						
 					}
 					sort_keys_table(volume, keys_arr);
+					if (main_sorted)
+						update_index(volume, keys_arr);
 				}
 					
 				else if (choice == 'q')
@@ -239,6 +244,8 @@ int main(int argc, char **argv)
 						continue;
 					}
 					qsort(keys_arr, volume, COUNTRY_SORT_SIZE, country_key_cmp);
+					if (main_sorted)
+						update_index(volume, keys_arr);
 				}
 					
 				else

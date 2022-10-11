@@ -75,6 +75,12 @@ int read_countries(FILE *fsrc, int *volume, country_t *country_arr, country_sort
 	return EXIT_SUCCESS;
 }
 
+void update_index(int volume, country_sort *keys_arr, country_t *country_arr)
+{
+	for (int i = 0; i < volume; i++)
+		keys_arr[i].src_index = i;
+		
+}
 
 int read_file(FILE *fsrc, int *volume, country_t *country_arr, country_sort *keys_arr, char *argv)
 {
@@ -400,7 +406,7 @@ void sort_main_table(int volume, country_t *countries_arr)
 		size_t flag = 1;
 		for (int j = 0; j < volume - i - 1; j++)
 		{
-			if (strcmp(countries_arr[j].continent_name, countries_arr[j + 1].continent_name) > 0)
+			if (strcmp(countries_arr[j].country_name, countries_arr[j + 1].country_name) > 0)
 			{
 				swap_country_main_table(&countries_arr[j], &countries_arr[j + 1]);
 				flag = 0;
@@ -456,7 +462,9 @@ void print_key_table(int volume, country_sort *keys_arr)
 void print_main_table_by_keys(int volume, country_t *countries_arr, country_sort *keys_arr)
 {
 	for (int i = 0; i < volume; i++)
+	{
 		print_country_t(&countries_arr[keys_arr[i].src_index]);
+	}
 }
 
 
