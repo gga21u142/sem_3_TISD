@@ -18,7 +18,6 @@ Mauritania 980634445 Arlington North_America 1 beach summer -27 14 366
 Somalia 1286665306 Laredo Australia 1 tour 836 art
 Macedonia 223178707 Salem Asia 1 tour 1309 nature
 Sri_Lanka 959660196 Orlando South_America 1 sport climbing 38447
-Burundi 578881169 Kansas_City Africa 1 sport surfing 133821
 Belarus 1413332431 Zurich Europe 0 sport skiing 129346
 Samoa 266212536 Amarillo North_America 1 sport skiing 101739
 Jamaica 1878663716 Norfolk Africa 1 sport skiing 155496
@@ -30,6 +29,7 @@ Gabon 1847507201 Prague Australia 1 tour 913 history
 Spain 1912884015 Baltimore Africa 1 tour 1554 nature
 Panama 1337295844 San_Antonio Australia 1 sport skiing 119119
 Dominica 1525786864 Nashville Australia 0 sport climbing 174943
+New_Zealand 506916714 Memphis Asia 1 sport surfing 138725
 Philippines 680634832 Santa_Ana North_America 1 sport skiing 83764
 Mongolia 1872272948 Paris Australia 1 sport surfing 112621
 Kiribati 1371788817 Glendale Africa 1 tour 393 art

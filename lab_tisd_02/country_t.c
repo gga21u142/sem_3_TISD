@@ -8,6 +8,7 @@
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
+
 int read_countries(FILE *fsrc, int *volume, country_t *country_arr, country_sort *keys_arr)
 {
 	int temp_err = 0;
@@ -74,17 +75,51 @@ int read_countries(FILE *fsrc, int *volume, country_t *country_arr, country_sort
 	return EXIT_SUCCESS;
 }
 
+
+int read_file(FILE *fsrc, int *volume, country_t *country_arr, country_sort *keys_arr, char *argv)
+{
+	(*volume) = 0;
+	fsrc = fopen(argv, "r");
+	if (fsrc == NULL)
+	{
+		printf("Could not open file!\n");
+		fflush(stdout);
+		return EXIT_FAILURE;
+	}
+
+	if (read_countries(fsrc, volume, country_arr, keys_arr) != EXIT_SUCCESS)
+	{	
+		printf("File is empty or damaged!\n");
+		fflush(stdout);
+		fclose(fsrc);
+		return EXIT_FAILURE;
+	}		
+	fclose(fsrc);
+	return EXIT_SUCCESS;
+}
+
+
+
+
 void print_country_t(country_t *country)
 {
-	printf("%s %d %s %s %d %s ", country->country_name, country->population, country->capital_name, country->continent_name, country->vaccine_need, country->main_tourism);
+	printf("%20s %16d %20s %20s %3d %10s ", country->country_name, country->population, country->capital_name, country->continent_name, country->vaccine_need, country->main_tourism);
+	fflush(stdout);
 	if ( ! strcmp(country->main_tourism, "tour"))
-		printf("%d %s\n", country->tourism_info.tour.objects_count, country->tourism_info.tour.tour_type);
-
+	{
+		printf("%10d %10s\n", country->tourism_info.tour.objects_count, country->tourism_info.tour.tour_type);
+		fflush(stdout);
+	}
 	else if ( ! strcmp(country->main_tourism, "beach"))
-		printf("%s %d %d %d\n", country->tourism_info.beach.main_season, country->tourism_info.beach.air_temperature, country->tourism_info.beach.water_temperature, country->tourism_info.beach.flight_time);
-	
+	{
+		printf("%10s %10d %10d %10d\n", country->tourism_info.beach.main_season, country->tourism_info.beach.air_temperature, country->tourism_info.beach.water_temperature, country->tourism_info.beach.flight_time);
+		fflush(stdout);
+	}
 	else if ( ! strcmp(country->main_tourism, "sport"))
-		printf("%s %d\n", country->tourism_info.sport.sport_type, country->tourism_info.sport.min_cost);
+	{
+		printf("%10s %10d\n", country->tourism_info.sport.sport_type, country->tourism_info.sport.min_cost);
+		fflush(stdout);
+	}
 }
 
 void print_countries(int volume, country_t *countries_arr)
@@ -98,10 +133,8 @@ void fprintf_country(FILE* fsrc, char* country_name, int population, char* capit
 	fprintf(fsrc, "%s %d %s %s %d %s ", country_name, population, capital_name, continent_name, vaccine_need, main_tourism);
 	if ( ! strcmp(main_tourism, "tour"))
 		fprintf(fsrc, "%d %s\n", sub_info_d1, sub_info_s);
-
 	else if ( ! strcmp(main_tourism, "beach"))
 		fprintf(fsrc, "%s %d %d %d\n", sub_info_s, sub_info_d1, sub_info_d2, sub_info_d3);
-
 	else if ( ! strcmp(main_tourism, "sport"))
 		fprintf(fsrc, "%s %d\n", sub_info_s, sub_info_d1);
 }
@@ -120,46 +153,76 @@ int add_country(FILE* fsrc)
 	int sub_info_d2 = -1;
 	int sub_info_d3 = -1;
 
+	char check;
 	printf("Input country name (if theres space in name put '_' instead: ");
+	fflush(stdout);
 	if (scanf("%s", country_name) != 1 || strlen(country_name) > M_COUNTRY - 2)
 	{
 		printf("Wrong country name lenght!\n");
+		fflush(stdout);
 		return EXIT_FAILURE;
 	}
 
 	printf("Input population: ");
+	fflush(stdout);
 	if (scanf("%d", &population) != 1)
 	{
 		printf("\nWrong population number!\n");
+		fflush(stdout);
 		return EXIT_FAILURE;
 	}
-
+	scanf("%c", &check);
+	if (check != '\n')
+	{
+		printf("Wrong number!\n");
+		fflush(stdout);
+		return EXIT_FAILURE;
+	}
 	printf("Input capital name (if theres space in name put '_' instead: ");
+	fflush(stdout);
 	if (scanf("%s", capital_name) != 1 || strlen(capital_name) > M_CAPITAL - 2)
 	{
 		printf("\nWrong capital name lenght!\n");
+		fflush(stdout);
 		return EXIT_FAILURE;
 	}
 
 	printf("Input continent name (Asia, Europe, North_America, South_America, Africa or Australia): ");
+	fflush(stdout);
 	if (scanf("%s", continent_name) != 1 || strlen(continent_name) > M_CONTINENT - 2)
-		 if (strcmp(continent_name, "Asia") && strcmp(continent_name, "Europe") && strcmp(continent_name, "North_America") && strcmp(continent_name, "South_America") && strcmp(continent_name, "Africa") && strcmp(continent_name, "Australia"))
-		{
-			printf("\nWrong continent name lenght!\n");
-			return EXIT_FAILURE;
-		}
-
-	printf("Input 0 if vaccine not needed, else 1: ");
-	if (scanf("%d", &vaccine_need) != 1 || (vaccine_need != 1 && vaccine_need != 0))
 	{
-		printf("\nWrong vaccine status!\n");
+		printf("\nWrong continent name lenght!\n");
+		fflush(stdout);
+		return EXIT_FAILURE;
+	}
+	if (strcmp(continent_name, "Asia") && strcmp(continent_name, "Europe") && strcmp(continent_name, "North_America") && strcmp(continent_name, "South_America") && strcmp(continent_name, "Africa") && strcmp(continent_name, "Australia"))
+	{
+		printf("\nWrong continent name!\n");
+		fflush(stdout);
 		return EXIT_FAILURE;
 	}
 
+	printf("Input 0 if vaccine not needed, else 1: ");
+	fflush(stdout);
+	if (scanf("%d", &vaccine_need) != 1 || (vaccine_need != 1 && vaccine_need != 0))
+	{
+		printf("\nWrong vaccine status!\n");
+		fflush(stdout);
+		return EXIT_FAILURE;
+	}
+	scanf("%c", &check);
+	if (check != '\n')
+	{
+		printf("Wrong number!\n");
+		fflush(stdout);
+		return EXIT_FAILURE;
+	}
 	printf("Input tourism type (tour, beach or sport): ");
+	fflush(stdout);
 	if (scanf("%s", main_tourism) != 1 || strlen(main_tourism) > M_TOURISM - 2)
 	{
 		printf("\nWrong tourism type lenght!\n");
+		fflush(stdout);
 		return EXIT_FAILURE;
 	}
 	
@@ -167,17 +230,28 @@ int add_country(FILE* fsrc)
 	if (! strcmp(main_tourism, "tour"))
 	{
 		printf("Input tour objects quntity: ");
+		fflush(stdout);
 		if (scanf("%d", &sub_info_d1) != 1)
 		{
 			printf("\nWrong tour objects quntity!\n");
+			fflush(stdout);
+			return EXIT_FAILURE;
+		}
+		scanf("%c", &check);
+		if (check != '\n')
+		{
+			printf("Wrong number!\n");
+			fflush(stdout);
 			return EXIT_FAILURE;
 		}
 
 		printf("Input tour type (historic, nature or art): ");
+		fflush(stdout);
 		if (scanf("%s", sub_info_s) != 1 || strlen(sub_info_s) > M_SUBINFO - 2)
 			if (strcmp(sub_info_s, "historic") && strcmp(sub_info_s, "nature") && strcmp(sub_info_s, "art"))
 			{
 				printf("\nWrong tour type!\n");
+				fflush(stdout);
 				return EXIT_FAILURE;
 			}
 	}
@@ -185,31 +259,58 @@ int add_country(FILE* fsrc)
 	else if (! strcmp(main_tourism, "beach"))
 	{
 		printf("Input main season for beach tour (summer, autumn, winter or spring): ");
+		fflush(stdout);
 		if (scanf("%s", sub_info_s) != 1 || strlen(sub_info_s) > M_SUBINFO - 2)
 			if (strcmp(sub_info_s, "summer") && strcmp(sub_info_s, "autumn") && strcmp(sub_info_s, "winter") && strcmp(sub_info_s, "spring"))
 			{
 				printf("\nWrong main season for beach tour!\n");
+				fflush(stdout);
 				return EXIT_FAILURE;
 			}
 
-		printf("Input air temperature: ");
+		printf("Input air temperature (in celsium): ");
+		fflush(stdout);
 		if (scanf("%d", &sub_info_d1) != 1)
 		{
 			printf("\nWrong air temperature!\n");
+			fflush(stdout);
 			return EXIT_FAILURE;
 		}
-
-		printf("Input water temperature: ");
+		scanf("%c", &check);
+		if (check != '\n')
+		{
+			printf("Wrong number!\n");
+			fflush(stdout);
+			return EXIT_FAILURE;
+		}
+		printf("Input water temperature (in celsium): ");
+		fflush(stdout);
 		if (scanf("%d", &sub_info_d2) != 1)
 		{
 			printf("\nWrong water temperature!\n");
+			fflush(stdout);
 			return EXIT_FAILURE;
 		}
-
+		scanf("%c", &check);
+		if (check != '\n')
+		{
+			printf("Wrong number!\n");
+			fflush(stdout);
+			return EXIT_FAILURE;
+		}
 		printf("Input flight time for beach tour in minutes: ");
+		fflush(stdout);
 		if (scanf("%d", &sub_info_d3) != 1)
 		{
 			printf("\nWrong flight time for beach tour!\n");
+			fflush(stdout);
+			return EXIT_FAILURE;
+		}
+		scanf("%c", &check);
+		if (check != '\n')
+		{
+			printf("Wrong number!\n");
+			fflush(stdout);
 			return EXIT_FAILURE;
 		}
 	}
@@ -217,17 +318,28 @@ int add_country(FILE* fsrc)
 	else if (! strcmp(main_tourism, "sport"))
 	{
 		printf("Input sport type (skiing, climbing or surfing): ");
+		fflush(stdout);
 		if (scanf("%s", sub_info_s) != 1 || strlen(sub_info_s) > M_SUBINFO - 2)
 			if (strcmp(sub_info_s, "skiing") && strcmp(sub_info_s, "climbing") && strcmp(sub_info_s, "surfing"))
 			{
 				printf("\nWrong sport type!\n");
+				fflush(stdout);
 				return EXIT_FAILURE;
 			}
 
 		printf("Input minimal cost for sport tour: ");
+		fflush(stdout);
 		if (scanf("%d", &sub_info_d1) != 1)
 		{
 			printf("\nWrong minimal cost for sport tour!\n");
+			fflush(stdout);
+			return EXIT_FAILURE;
+		}
+		scanf("%c", &check);
+		if (check != '\n')
+		{
+			printf("Wrong number!\n");
+			fflush(stdout);
 			return EXIT_FAILURE;
 		}
 	}
@@ -235,6 +347,7 @@ int add_country(FILE* fsrc)
 	else
 	{
 		printf("\nWrong tourism type name!\n");
+		fflush(stdout);
 		return EXIT_FAILURE;
 	}
 
@@ -334,7 +447,10 @@ void sort_keys_table(int volume, country_sort *keys_arr)
 void print_key_table(int volume, country_sort *keys_arr)
 {
 	for (int i = 0; i < volume; i++)
-		printf("%d %s\n", keys_arr[i].src_index, keys_arr[i].country_name);
+	{
+		printf("%5d %20s\n", keys_arr[i].src_index, keys_arr[i].country_name);
+		fflush(stdout);
+	}
 }
 
 void print_main_table_by_keys(int volume, country_t *countries_arr, country_sort *keys_arr)
@@ -393,6 +509,7 @@ void delete_country(FILE *fsrc, int volume, country_t *countries_arr, char *cont
 			}
 
 			fprintf_country(fsrc, ptr->country_name, ptr->population, ptr->capital_name, ptr->continent_name, ptr->vaccine_need, ptr->main_tourism, sub_info_s, sub_info_d1, sub_info_d2, sub_info_d3);
+			fflush(fsrc);
 		}
 	}
 }
