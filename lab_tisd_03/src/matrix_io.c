@@ -57,7 +57,8 @@ int read_matrix_file(FILE *fsrc, double **matrix, int *row, int *col)
     fscanf(fsrc, "%c", &check);
     if (check != '\n')
         return FILE_ERROR;
-        
+    if (row <= 0 || col <= 0)
+    	return FILE_ERROR;
     *matrix = malloc((*row) * (*col) * M_SIZE);
     if (*matrix == NULL)
         return MEMORY_ERROR;
@@ -136,7 +137,9 @@ int read_matrix_sparce_file(FILE *fsrc, int *not_zeros_A, int *row, int *col, do
     fscanf(fsrc, "%c", &check);
     if (check != '\n')
         return FILE_ERROR;
-
+    if (row <= 0 || col <= 0)
+    	return FILE_ERROR;
+    	
     *arr_AN = malloc((*row) * (*col) * M_SIZE);
 	if (*arr_AN == NULL)
        	return MEMORY_ERROR;

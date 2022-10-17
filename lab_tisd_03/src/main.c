@@ -4,6 +4,7 @@
 
 #include "matrix_proc.h"
 #include "matrix_io.h"
+#include "time_exp.h"
 
 #define FILE_ERROR -1
 #define EXIT_SUCCESS 0
@@ -420,9 +421,9 @@ int main(void)
 					}
 
 
-					printf("Input matrix B sizes: ");
+					printf("Input vertical vector B sizes: ");
 					scanf("%d%d", &Bi, &Bj);
-					while (Bi <= 0 || Bj <= 0 || Aj != Bi)
+					while (Bi <= 0 || Bj != 1 || Aj != Bi)
 					{
 						printf("Wrong sizes! Try one more time: ");
 						scanf("%d%d", &Bi, &Bj);
@@ -465,7 +466,7 @@ int main(void)
 					char dir_A[30];
 					char dir_B[30];
 					double *matrix_A, *matrix_B, *matrix_C;
-					printf("Input file path with first matrix: ");
+					printf("Input file path with matrix A: ");
 					scanf("%s", dir_A);
 
 					FILE *fsrc_A = fopen(dir_A, "r");
@@ -490,7 +491,7 @@ int main(void)
 					printf("Matrix readed!\n");
 					fclose(fsrc_A);
 
-					printf("Input file path with second matrix: ");
+					printf("Input file path with vertical vector B: ");
 					scanf("%s", dir_B);
 					FILE *fsrc_B = fopen(dir_B, "r");
 					while (fsrc_B == NULL || (! strcmp(dir_B, "exit")))
@@ -510,9 +511,16 @@ int main(void)
 						printf("File is not capable of program needs!\n");
 						continue;
 					}
-					printf("Matrix readed!\n");
+					if (Bj != 1)
+					{
+						printf("Vector's width is not 1!\n");
+						free(matrix_A);
+						free(matrix_B);
+						continue;
+					}
+					printf("Vector readed!\n");
 					fclose(fsrc_B);
-
+					
 					if (Aj != Bi)
 					{
 						printf("Matrix can't be multiplied!\n");
@@ -539,8 +547,19 @@ int main(void)
 			}
 			case 3:
 			{
-				printf("Work in progress!\n");
-				continue;
+				int row, col, percent;
+				char file_name[30];
+				printf("Input row and col sizes for random matrix: ");
+				scanf("%d%d", &row, &col);
+				printf("Input percentage of zeros: ");
+				scanf("%d", &percent);
+				if (generate_rand_matrix(file_name, row, col, percent) != EXIT_SUCCESS)
+				{
+					printf("Cant generate file with random matrix!\n");
+					continue;
+				}
+				
+				break;
 			}
 			default:
 			{
