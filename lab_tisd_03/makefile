@@ -10,7 +10,7 @@ UNIT_DIR = ./unit_tests
 
 
 # Опции компиляции
-CFLAGS := -std=c99 -Wall -Wpedantic -Wextra -Wfloat-equal -Wfloat-conversion -Werror -I $(INC_DIR)
+CFLAGS := -std=gnu99 -Wall -Wpedantic -Wextra -Wfloat-equal -Wfloat-conversion -Werror -I $(INC_DIR)
 
 
 # Опции сборки
