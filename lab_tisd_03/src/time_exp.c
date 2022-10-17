@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #include "time_exp.h"
+#include "matrix_io.h"
 
 #define FILE_ERROR -1
 #define EXIT_SUCCESS 0
@@ -32,23 +33,43 @@ int generate_rand_matrix(char *file_name, int row, int col, int percentage)
 	if (fdst == NULL)
 		return FILE_ERROR;
 	
-	int division = row * col + 1;
-	if (percentage != 0)
-		division = 100 / percentage;
+	int zeros = (int)(percentage / 100.0 * row * col);
 	fprintf(fdst, "%d %d\n", row, col);
+
+	double *matrix = malloc(row * col * M_SIZE);
+	if (matrix == NULL)
+		return MEMORY_ERROR;
+	
+	for (int i = 0; i < col; i++)
+		for (int j = 0; j < row; j++)
+			matrix[i * row + j] = randfrom(-100000, 100000);
+
+	int itemp, jtemp;
+	for (int i = 0; i < zeros; i++)
+	{
+		itemp = rand() % row;
+		jtemp = rand() % col;
+		while (fabs(matrix[itemp * row + jtemp]) < 1e-16)
+		{
+			itemp = rand() % row;
+			jtemp = rand() % col;
+		}
+		matrix[itemp * row + jtemp] = 0;
+	}
+
+
 	for (int i = 0; i < col; i++)
 	{
 		for (int j = 0; j < row; j++)
 		{
-			if ((i * row + j) % division)
-				fprintf(fdst, "%.6lf", randfrom(-100000, 100000));
-			else
-				fprintf(fdst, "%.6lf", 0.0);
+			fprintf(fdst, "%.6lf", matrix[i * row + j]);
 			if (j != row - 1)
 				fprintf(fdst, " ");
 		}
 		fprintf(fdst, "\n");
 	}
+
+	free(matrix);
 	fclose(fdst);
 	return EXIT_SUCCESS;
 }
