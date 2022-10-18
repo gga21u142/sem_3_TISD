@@ -10,6 +10,13 @@
 #define EXIT_FAILURE 1
 #define MEMORY_ERROR 2
 
+/* typedef struct
+{
+    double *arr_N;
+    int *arr_I;
+    int *arr_J;
+} sparce_matrix;
+ */
 
 void mutiply_matrixes_standart(double *matrix_A, int Ai, int Aj, double *matrix_B, int Bj, double *matrix_C)
 {

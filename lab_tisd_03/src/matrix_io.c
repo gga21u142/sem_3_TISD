@@ -112,6 +112,26 @@ int read_matrix_sparse_key(int row, int col, double *AN, int *AI, int *AJ, int *
     return EXIT_SUCCESS;
 }
 
+int read_matrix_sparse_key_coord(int row, int col, double *AN, int *AI, int *AJ, int *not_zeros_A)
+{
+    double elem;
+    for (int i = 0; i < col; i++)
+    {
+        for (int j = 0; j < row; j++)
+        {
+            elem = AN[i * row + j];
+            if (fabs(elem) > 1e-16)
+            {
+                AN[(*not_zeros_A)++] = elem;
+                AI[(*not_zeros_A) - 1] = j;
+                if (AJ[i] == -1)
+                    AJ[i] = (*not_zeros_A) - 1;
+            }
+        }
+    }
+    return EXIT_SUCCESS;
+}
+
 void print_matrix_sparse(double *arr_AN, int not_zeros_A, int *arr_AI, int Aj, int *arr_AJ)
 {
     printf("Array with not zero elemets:\n");

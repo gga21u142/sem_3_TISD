@@ -55,7 +55,12 @@ int main(void)
 
 
 					printf("Input matrix A sizes: ");
-					scanf("%d%d", &Ai, &Aj);
+					if (scanf("%d%d", &Ai, &Aj) != 2)
+					{
+						input_flush();
+						printf("Wrong sizes!\n");
+						continue;
+					}
 					input_flush();
 					while (Ai <= 0 || Aj <= 0)
 					{
@@ -65,7 +70,7 @@ int main(void)
 					}
 
 					int not_zeros_A = 0;
-					double *arr_AN = malloc(Ai * Aj * M_SIZE);
+					double *arr_AN = calloc(Ai * Aj, M_SIZE);
 					if (arr_AN == NULL)
 					{
 						printf("Can't allocate AN!\n");
@@ -88,16 +93,55 @@ int main(void)
 					}
 					for (int i = 0; i < Aj; i++)
 						arr_AJ[i] = -1;
-
-					ret_err = read_matrix_sparse_key(Ai, Aj, arr_AN, arr_AI, arr_AJ, &not_zeros_A);
-					while (ret_err != EXIT_SUCCESS)
+					///
+					printf("Do you want to inpu all or by pos? Input pos or all: ");
+					scanf("%s", choose);
+					while (strlen(choose) > 5 || (! strcmp(choose, "pos") && ! strcmp(choose, "all")))
+					{
+						printf("\nWrong option, try one more time!\n");
+						input_flush();
+						printf("\nInput 'pos' or 'all': ");
+						scanf("%s", choose);
+					}
+					if (! strcmp(choose, "all"))
 					{
 						ret_err = read_matrix_sparse_key(Ai, Aj, arr_AN, arr_AI, arr_AJ, &not_zeros_A);
+						while (ret_err != EXIT_SUCCESS)
+						{
+							ret_err = read_matrix_sparse_key(Ai, Aj, arr_AN, arr_AI, arr_AJ, &not_zeros_A);
+						}
 					}
+					else
+					{
+						double tempd;
+						int it, jt;
+						printf("\nInput positions (input -1 -1 if you want to stop): ");
+						while (scanf("%d%d", &it, &jt) == 2)
+						{
+							input_flush();
+							if (it == -1 && jt == -1)
+								break;
+							printf("\nInput number: ");
+							if (scanf("%lf", &tempd) == 1 && it < Ai && jt < Aj)
+								arr_AN[it * Ai + jt] = tempd;
+							else
+								break;
+							printf("\nInput positions (input -1 -1 if you want to stop): ");
+						}
+						read_matrix_sparse_key_coord(Ai, Aj, arr_AN, arr_AI, arr_AJ, &not_zeros_A);
+					}
+					///
+					
 
 
 					printf("Input vertical vector B sizes: ");
-					scanf("%d%d", &Bi, &Bj);
+					
+					if (scanf("%d%d", &Bi, &Bj) != 2)
+					{
+						input_flush();
+						printf("Wrong sizes!\n");
+						continue;
+					}
 					while (Bi <= 0 || Bj != 1 || Aj != Bi)
 					{
 						printf("Wrong sizes! Try one more time: ");
@@ -107,7 +151,7 @@ int main(void)
 
 
 					int not_zeros_B = 0;
-					double *arr_BN = malloc(Bi * Bj * M_SIZE);
+					double *arr_BN = calloc(Bi * Bj, M_SIZE);
 					if (arr_BN == NULL)
 					{
 						printf("Can't allocate BN!\n");
@@ -134,13 +178,44 @@ int main(void)
 					}
 					for (int i = 0; i < Bj; i++)
 						arr_BJ[i] = -1;
-
-					ret_err = read_matrix_sparse_key(Bi, Bj, arr_BN, arr_BI, arr_BJ, &not_zeros_B);
-					while (ret_err != EXIT_SUCCESS)
+					///
+					printf("Do you want to inpu all or by pos? Input pos or all: ");
+					scanf("%s", choose);
+					while (strlen(choose) > 5 || (! strcmp(choose, "pos") && ! strcmp(choose, "all")))
+					{
+						printf("\nWrong option, try one more time!\n");
+						input_flush();
+						printf("\nInput 'pos' or 'all': ");
+						scanf("%s", choose);
+					}
+					if (! strcmp(choose, "all"))
 					{
 						ret_err = read_matrix_sparse_key(Bi, Bj, arr_BN, arr_BI, arr_BJ, &not_zeros_B);
+						while (ret_err != EXIT_SUCCESS)
+						{
+							ret_err = read_matrix_sparse_key(Bi, Bj, arr_BN, arr_BI, arr_BJ, &not_zeros_B);
+						}
 					}
-					
+					else
+					{
+						double tempd;
+						int it, jt;
+						printf("\nInput positions (input -1 -1 if you want to stop): ");
+						while (scanf("%d%d", &it, &jt) == 2)
+						{
+							input_flush();
+							if (it == -1 && jt == -1)
+								break;
+							printf("\nInput number: ");
+							if (scanf("%lf", &tempd) == 1 && it < Bi && jt < Bj)
+								arr_AN[it * Bi + jt] = tempd;
+							else
+								break;
+							printf("\nInput positions (input -1 -1 if you want to stop): ");
+						}
+						read_matrix_sparse_key_coord(Bi, Bj, arr_BN, arr_BI, arr_BJ, &not_zeros_B);
+					}
+					///
 					printf("\nMatrix A:\n");
 					print_matrix_sparse(arr_AN, not_zeros_A, arr_AI, Aj, arr_AJ);
 					printf("\nVector B:\n");
@@ -392,7 +467,12 @@ int main(void)
 				{
 					int Ai, Aj, Bi, Bj;
 					printf("Input matrix A sizes: ");
-					scanf("%d%d", &Ai, &Aj);
+					if (scanf("%d%d", &Ai, &Aj) != 2)
+					{
+						input_flush();
+						printf("Wrong sizes!\n");
+						continue;
+					}
 					input_flush();
 					while (Ai <= 0 || Aj <= 0)
 					{
@@ -400,38 +480,102 @@ int main(void)
 						scanf("%d%d", &Ai, &Aj);
 						input_flush();
 					}
-					double *matrix_A = malloc(Ai * Aj * sizeof(M_SIZE));
+					double *matrix_A = calloc(Ai * Aj, sizeof(M_SIZE));
 					if (matrix_A == NULL)
 					{
 						printf("Can't allocate matrix A!\n");
 						return MEMORY_ERROR;
 					}
-					ret_err = read_matrix_key(matrix_A, Ai, Aj);
-					while (ret_err != EXIT_SUCCESS)
+					printf("Do you want to inpu all or by pos? Input pos or all: ");
+					scanf("%s", choose);
+					while (strlen(choose) > 3 || (! strcmp(choose, "pos") && ! strcmp(choose, "all")))
+					{
+						printf("\nWrong option, try one more time!\n");
+						input_flush();
+						printf("\nInput 'pos' or 'all': ");
+						scanf("%s", choose);
+					}
+					if (! strcmp(choose, "all"))
 					{
 						ret_err = read_matrix_key(matrix_A, Ai, Aj);
+						while (ret_err != EXIT_SUCCESS)
+						{
+							ret_err = read_matrix_key(matrix_A, Ai, Aj);
+						}
 					}
-
-
+					else
+					{
+						double tempd;
+						int it, jt;
+						printf("\nInput positions (input -1 -1 if you want to stop): ");
+						while (scanf("%d%d", &it, &jt) == 2)
+						{
+							input_flush();
+							if (it == -1 || jt == -1)
+								break;
+							printf("\nInput number: ");
+							if (scanf("%lf", &tempd) == 1 && it < Ai && jt < Aj)
+								matrix_A[it * Ai + jt] = tempd;
+							else
+								break;
+							printf("\nInput positions (input -1 -1 if you want to stop): ");
+						}
+					}
 					printf("Input vertical vector B sizes: ");
-					scanf("%d%d", &Bi, &Bj);
+					if (scanf("%d%d", &Bi, &Bj) != 2)
+					{
+						input_flush();
+						printf("Wrong sizes!\n");
+						continue;
+					}
 					while (Bi <= 0 || Bj != 1 || Aj != Bi)
 					{
 						printf("Wrong sizes! Try one more time: ");
 						scanf("%d%d", &Bi, &Bj);
 						input_flush();
 					}
-					double *matrix_B = malloc(Bi * Bj * sizeof(M_SIZE));
+					double *matrix_B = calloc(Bi * Bj, sizeof(M_SIZE));
 					if (matrix_B == NULL)
 					{
 						printf("Can't allocate matrix B!\n");
 						free(matrix_A);
 						return MEMORY_ERROR;
 					}
-					ret_err = read_matrix_key(matrix_B, Bi, Bj);
-					while (ret_err != EXIT_SUCCESS)
+					printf("Do you want to inpu all or by pos? Input pos or all: ");
+					scanf("%s", choose);
+					while (strlen(choose) > 3 || (! strcmp(choose, "pos") && ! strcmp(choose, "all")))
+					{
+						printf("\nWrong option, try one more time!\n");
+						input_flush();
+						printf("\nInput 'pos' or 'all': ");
+						scanf("%s", choose);
+					}
+					if (! strcmp(choose, "all"))
 					{
 						ret_err = read_matrix_key(matrix_B, Bi, Bj);
+						while (ret_err != EXIT_SUCCESS)
+						{
+							ret_err = read_matrix_key(matrix_B, Bi, Bj);
+						}
+					}
+					else
+					{
+						double tempd;
+						int it, jt;
+						printf("\nInput positions (input -1 -1 if you want to stop): ");
+						while (scanf("%d%d", &it, &jt) == 2)
+						{
+							input_flush();
+							if (it == -1 || jt == -1)
+								break;
+							printf("\nInput number: ");
+							if (scanf("%lf", &tempd) == 1 && it < Bi && jt < Bj)
+								matrix_B[it * Bi + jt] = tempd;
+							else
+								break;
+							printf("\nInput positions (input -1 -1 if you want to stop): ");
+						}
+
 					}
 					printf("Matrix A:\n");
 					print_matrix_standart(matrix_A, Ai, Aj);
