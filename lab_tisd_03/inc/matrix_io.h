@@ -3,16 +3,18 @@
 
 #define M_SIZE sizeof(double)
 
+#include "matrix_proc.h"
+
 int read_matrix_key(double *matrix, int row, int col);
-void print_matrix_standart(double *matrix, int row, int col);
+void print_matrix(double *matrix, int row, int col);
 void input_flush(void);
 int read_matrix_file(FILE *fsrc, double **matrix, int *row, int *col);
 
-int read_matrix_sparse_key(int row, int col, double *AN, int *AI, int *AJ, int *not_zeros_A);
-void print_matrix_sparse(double *arr_AN, int not_zeros_A, int *arr_AI, int Aj, int *arr_AJ);
-int read_matrix_sparse_key_coord(int row, int col, double *AN, int *AI, int *AJ, int *not_zeros_A);
+int read_matrix_sparse_key(sparce_matrix *matrix_A);
+void print_matrix_sparse(sparce_matrix matrix_A);
+int read_matrix_sparse_key_coord(sparce_matrix *matrix_A);
 
-int read_matrix_sparce_file(FILE *fsrc, int *not_zeros_A, int *row, int *col, double **arr_AN, int **arr_AI, int **arr_AJ);
+int read_matrix_sparce_file(FILE *fsrc, sparce_matrix *matrix_A);
 
 
 #endif // __MATRIX_IO_H__

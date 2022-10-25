@@ -2,7 +2,16 @@
 #define __MATRIX_PROC_H__
 
 
+typedef struct
+{
+    int row, col;
+    int not_zeros;
+    double *AN;
+    int *AI;
+    int *AJ;
+} sparce_matrix;
+
 void mutiply_matrixes_standart(double *matrix_A, int Ai, int Aj, double *matrix_B, int Bj, double *matrix_C);
-void mutiply_matrix_vector_sparse(int not_zeros_A, double *arr_AN, int *arr_AI, int Aj, int *arr_AJ, int not_zeros_B, double *arr_BN, int *arr_BI, int Bj, double *arr_C, int *not_zeros_C, double *arr_CN, int *arr_CI, int *arr_CJ);
+void mutiply_matrix_vector_sparse(sparce_matrix matrix_A, sparce_matrix matrix_B, sparce_matrix *matrix_C, double *arr_C);
 
 #endif // __MATRIX_PROC_H__
