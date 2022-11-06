@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "time.h": "c",
+        "matrix_proc.h": "c",
+        "stdio.h": "c",
+        "list_proc.h": "c",
+        "stdlib.h": "c",
+        "time_exp.h": "c"
+    }
+}
