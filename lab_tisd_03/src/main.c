@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
+#include <math.h>
 
 #include "matrix_proc.h"
 #include "matrix_io.h"
@@ -135,7 +135,7 @@ int main(void)
 									temp_ch = scanf("%lf", &tempd);
 									input_flush();
 								}
-								matrix_A.AN[it * matrix_A.row + jt] = tempd;							
+								matrix_A.AN[it * matrix_A.col + jt] = tempd;							
 							}
 							else
 							{
@@ -236,7 +236,7 @@ int main(void)
 									temp_ch = scanf("%lf", &tempd);
 									input_flush();
 								}
-								matrix_B.AN[it * matrix_B.row + jt] = tempd;							
+								matrix_B.AN[it * matrix_B.col + jt] = tempd;							
 							}
 							else
 							{
@@ -246,6 +246,7 @@ int main(void)
 						read_matrix_sparse_key_coord(&matrix_B);
 					}
 					///
+
 					printf("\nMatrix A:\n");
 					print_matrix_sparse(matrix_A);
 					printf("\nVector B:\n");
@@ -636,24 +637,84 @@ int main(void)
 						}
 
 					}
-					printf("Matrix A:\n");
-					print_matrix(matrix_A, Ai, Aj);
-					printf("Matrix B:\n");
-					print_matrix(matrix_B, Bi, Bj);
-					double *matrix_C = malloc(Ai * Bj * sizeof(M_SIZE));
-					if (matrix_C == NULL)
+					if (Ai <= 20 && Aj <= 20)
+					{
+						printf("Matrix A:\n");
+						print_matrix(matrix_A, Ai, Aj);
+					}
+					if (Bi <= 20 && Bj <= 20)
+					{
+						printf("Matrix B:\n");
+						print_matrix(matrix_B, Bi, Bj);
+					}
+					double *array_C = malloc(Ai * Bj * sizeof(M_SIZE));
+					if (array_C == NULL)
 					{
 						printf("Can't allocate result matrix!\n");
 						free(matrix_A);
-						free(matrix_C);
+						free(matrix_B);
 						return MEMORY_ERROR;
 					}
-					mutiply_matrixes_standart(matrix_A, Ai, Aj, matrix_B, Bj, matrix_C);
+					mutiply_matrixes_standart(matrix_A, Ai, Aj, matrix_B, Bj, array_C);
 					printf("Result matrix:\n");
-					print_matrix(matrix_C, Ai, Bj);
+
+					sparce_matrix matrix_C;
+					matrix_C.not_zeros = 0;
+					matrix_C.row = Ai;
+					matrix_C.col = Bj;
+					if (matrix_C.row <= 20 && matrix_C.col <= 20)
+						print_matrix(array_C, Ai, Bj);
+					
+					//
+					matrix_C.AN = malloc(Ai * Bj * M_SIZE);
+					if (matrix_C.AN == NULL)
+					{
+						free(matrix_A);
+						free(matrix_B);
+						free(array_C);
+       					return MEMORY_ERROR;
+					}
+					matrix_C.AI = malloc(Ai * Bj * sizeof(int));
+					if (matrix_C.AI == NULL)
+					{
+						free(matrix_C.AN);
+						free(matrix_A);
+						free(matrix_B);
+						free(array_C);
+						printf("Can't allocate CI!\n");
+       					return MEMORY_ERROR;
+					}
+					matrix_C.AJ = malloc(Bj * sizeof(int));
+					if (matrix_C.AJ == NULL)
+					{
+						free(matrix_C.AN);
+						free(matrix_C.AI);
+						free(matrix_A);
+						free(matrix_B);
+						free(array_C);
+						printf("Can't allocate CJ!\n");
+       					return MEMORY_ERROR;
+					}
+					for (int i = 0; i < Bj; i++)
+						matrix_C.AJ[i] = -1;
+					//
+					for (int i = 0; i < Ai; i++)
+					{
+						if (fabs(array_C[i]) > 1e-16)
+						{
+							(matrix_C.AN)[(matrix_C.not_zeros)++] = array_C[i];
+							(matrix_C.AI)[(matrix_C.not_zeros) - 1] = i;
+							if ((matrix_C.AJ)[i] == -1)
+									(matrix_C.AJ)[i] = (matrix_C.not_zeros) - 1;
+						}
+					}
+					print_matrix_sparse(matrix_C);
 					free(matrix_A);
 					free(matrix_B);
-					free(matrix_C);
+					free(array_C);
+					free(matrix_C.AN);
+					free(matrix_C.AI);
+					free(matrix_C.AJ);
 				}
 				else if (! strcmp(choose, "file"))
 				{

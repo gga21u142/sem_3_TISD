@@ -12,7 +12,7 @@
 
 int push_arr_stack(arr_stack* stack, char* word)
 {
-    if (*(stack->ptr_cur) == *(stack->ptr_end))
+    if (stack->ptr_cur == stack->ptr_end)
         return MEMORY_ERROR;
     
     stack->ptr_cur += MAX_LENGHT + 1;

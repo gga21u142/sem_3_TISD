@@ -74,7 +74,7 @@ void time_experiment_stack(int size, arr_stack* arr, list_stack** stack_head)
     fclose(fsrc);
 
     clock_gettime(CLOCK_MONOTONIC_RAW, &t_beg);
-    print_method_arr_stack(arr, 0);
+    print_method_arr_stack(arr, 1);
     clock_gettime(CLOCK_MONOTONIC_RAW, &t_end);	
     array_print_time = calc_elapsed_time(&t_beg, &t_end);
 
