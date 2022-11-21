@@ -4,7 +4,7 @@
 #include "queue.h"
 #include "qarray.h"
 #include "simul.h"
-#include "error.h"
+
 
 #define ARR_SIZE_BIG 1000
 
@@ -106,7 +106,12 @@ int main()
 		rc = time_measure(arrk[i]);
 		if (rc != OK)
 		{
-			errmsg(rc);
+			if (rc == ERR_MEMORY):
+				printf("Queue overflow!\n");
+			else if (rc == ERR_EMPTY):
+				printf("Queue is empty!\n");
+			else:
+				printf("Unknown error!\n");
 			return rc;
 		}
 	}

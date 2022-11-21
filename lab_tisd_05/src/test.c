@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <math.h>
-#include "error.h"
 #include "simul.h"
 
 void test_call(FILE *fres, FILE *frep,

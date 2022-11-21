@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "error.h"
 #include "simul.h"
 #include "qarray.h"
 #include "queue.h"

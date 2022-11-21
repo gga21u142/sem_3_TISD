@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "error.h"
 #include "qarray.h"
 #include "queue.h"
 #include "simul.h"

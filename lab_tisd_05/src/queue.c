@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "queue.h"
-#include "error.h"
 
 int push_queue(int val, list **pin, list **pout)
 {

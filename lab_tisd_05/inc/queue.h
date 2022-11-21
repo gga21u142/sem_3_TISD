@@ -1,6 +1,12 @@
 #ifndef __QUEUE_H__
 #define __QUEUE_H__
 
+#define OK 0
+#define ERR_MEMORY -1
+#define ERR_EMPTY -2
+
+#define ARR_SIZE 100
+
 typedef struct list_t list;
 
 struct list_t
