@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "qarray.h"
-#include "error.h"
 
 int push_qarr(int val, int **pin, int **pout, int *k, int *qb, int *qe)
 {
