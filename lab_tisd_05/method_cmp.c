@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "queue.h"
+#include "qlist.h"
+#include "error.h"
 #include "qarray.h"
 #include "simul.h"
 
@@ -25,14 +26,14 @@ int time_measure(int len)
 	tick_t tpush_list = 0, tpop_list = 0;
 	tick_t tpush_arr = 0, tpop_arr = 0;
 	
-	for (int j = 0; j < 100; j++)
+	for (int j = 0; j < 1000; j++)
 	{
 		list *pin = NULL, *pout = NULL;
 		for (int k = 0; k < len; k++)
 		{
 			int d = rand() % 100 - 50;
 			start = tick();
-			rc = push_queue(d, &pin, &pout);
+			rc = push_qlist(d, &pin, &pout);
 			end = tick();
 			if (rc != EXIT_SUCCESS)
 				return rc;
@@ -42,16 +43,16 @@ int time_measure(int len)
 		for (int k = 0; k < len; k++)
 		{
 			start = tick();
-			pop_queue(&pin, &pout);
+			pop_qlist(&pin, &pout);
 			end = tick();
 			tpop_list += end - start;
 		}
 	}
-	tpush_list /= 100;
-	tpop_list /= 100;
+	tpush_list /= 1000;
+	tpop_list /= 1000;
 	printf("%6lu %6lu ", tpush_list, tpop_list);
 	
-	for (int j = 0; j < 100; j++)
+	for (int j = 0; j < 1000; j++)
 	{
 		int arr[ARR_SIZE_BIG], arr_k = 0;
 		int *qb = arr, *qe = arr + ARR_SIZE_BIG;
@@ -75,8 +76,8 @@ int time_measure(int len)
 			tpop_arr += end - start;
 		}
 	}
-	tpush_arr /= 100;
-	tpop_arr /= 100;
+	tpush_arr /= 1000;
+	tpop_arr /= 1000;
 	printf("%6lu %6lu ", tpush_arr, tpop_arr);
 	
 	size_t mem_list = len * sizeof(list);
@@ -105,15 +106,7 @@ int main()
 		printf("%4d ", arrk[i]);
 		rc = time_measure(arrk[i]);
 		if (rc != EXIT_SUCCESS)
-		{
-			if (rc == ERR_MEMORY):
-				printf("Queue overflow!\n");
-			else if (rc == ERR_EMPTY):
-				printf("Queue is empty!\n");
-			else:
-				printf("Unknown error!\n");
-			return rc;
-		}
+			errmsg(rc);
 	}
 	return rc;
 }	
