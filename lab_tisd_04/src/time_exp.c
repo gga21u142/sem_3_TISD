@@ -4,8 +4,8 @@
 #include <time.h>
 #include <stdint.h>
 
-#include "array_proc.h"
-#include "list_proc.h"
+#include "general_funcs.h"
+#include "tree_funcs.h"
 #include "time_exp.h"
 
 #define FILE_ERROR -1
@@ -13,10 +13,13 @@
 #define EXIT_FAILURE 1
 #define MEMORY_ERROR 2
 
-unsigned long long calc_elapsed_time(const struct timespec *beg, const struct timespec *end)
+tick_t tick(void)
 {
-    return ((unsigned long long) (end->tv_sec - beg->tv_sec) * 1000 * 1000 * 1000 + (end->tv_nsec - beg->tv_nsec)) / 1000; 
+	tick_t d;
+	__asm__ __volatile__ ("rdtsc" : "=A" (d) );
+	return d;
 }
+
 double randfrom(double min, double max) 
 {
     double range = (max - min); 

@@ -27,8 +27,9 @@ void print_menu(void)
     printf("|\t2. Add word.                                             |\n");
     printf("|\t3. Delete word.                                          |\n");
     printf("|\t4. Search the word.                                      |\n");
-    printf("|\t5. Print tree's words.                                   |\n");
+    printf("|\t5. Print tree's words in infix order.                    |\n");
     printf("|\t6. Search for words that start with character.           |\n");
-    printf("|\t7. Calculate and compare time.                           |\n");
+    printf("|\t7. Draw a tree.                                          |\n");
+    printf("|\t8. Calculate and compare time.                           |\n");
     printf("------------------------------------------------------------------\n");
 }

@@ -5,7 +5,7 @@
 
 #include "general_funcs.h"
 #include "tree_funcs.h"
-//#include "time_exp.h"
+#include "time_exp.h"
 
 #define FILE_ERROR -1
 #define EXIT_SUCCESS 0
@@ -102,7 +102,11 @@ int main(void)
 			}
 			case 3:                                                                  //Удаление слова
 			{
-				struct tree_node* tmp_node = NULL;
+				if (init_tree == NULL)
+				{
+					printf("Can't delete elemnt from empty tree!\n");
+					continue;
+				}
 				printf("Input word for delete (<= 20 chars): ");
 				scanf("%s", word_tmp);
 				if (strlen(word_tmp) > MAX_LENGHT)
@@ -150,15 +154,23 @@ int main(void)
 				int n = 0;
 				printf("Input character for search: ");
 				scanf("%c", &c);
+				input_flush();
 				printf("\n");
-				tree_words_char_find(init_tree, c, &n);
+				tree_words_char_find(init_tree, c, &n, 1);
 				printf("\n");
 				printf("%d words was found.\n", n);
 				continue;
 			}
-			case 7:                                                                  //Сравнение времени
+			case 7:                                                                  //Нарисовать дерево
 			{
-				printf("\nWrong menu option, try one more time!\n");
+				FILE* dot_f = fopen("words_tree.gv", "w+");
+				tree_export_to_dot(dot_f, init_tree);
+				fclose(dot_f);
+				continue;
+			}
+			case 8:                                                                  //Сравнение времени
+			{
+				time_experiment();
 				continue;
 			}
 			default:                                                                //Обработчик ошибочного меню

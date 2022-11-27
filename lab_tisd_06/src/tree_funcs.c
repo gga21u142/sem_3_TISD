@@ -105,20 +105,20 @@ struct tree_node* tree_file_read(FILE *fsrc)
     return init_tree;
 }
 
-void tree_words_char_find(struct tree_node *tree, char c, int *n)
+void tree_words_char_find(struct tree_node *tree, char c, int *n, int mode)
 {
     if (tree == NULL)
         return;
 
-    tree_words_char_find(tree->left, c, n);
+    tree_words_char_find(tree->left, c, n, mode);
     if (memchr(tree->name, c, sizeof(char)) != NULL)
     {
         (*n)++;
-        printf("%s ", tree->name);
+        if (mode)
+            printf("%s ", tree->name);
     }
-    tree_words_char_find(tree->right, c, n);
+    tree_words_char_find(tree->right, c, n, mode);
 }
-
 
 struct tree_node* node_delete(struct tree_node *tree, const char *name)
 {
@@ -223,4 +223,29 @@ struct tree_node* node_delete(struct tree_node *tree, const char *name)
     }
 
     return tree;
+}
+
+
+void node_to_dot(struct tree_node *tree, FILE *f)
+{
+    if (tree == NULL)
+        return;
+
+    if (tree->left)
+        fprintf(f, "%s -> %s;\n", tree->name, tree->left->name);
+
+    if (tree->right)
+        fprintf(f, "%s -> %s;\n", tree->name, tree->right->name);
+
+    node_to_dot(tree->left, f);
+    node_to_dot(tree->right, f);
+}
+
+void tree_export_to_dot(FILE *f, struct tree_node *tree)
+{
+    fprintf(f, "digraph Words {\n");
+
+    node_to_dot(tree, f);
+
+    fprintf(f, "}\n");
 }
