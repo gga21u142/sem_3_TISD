@@ -107,7 +107,7 @@ struct tree_node* tree_file_read(FILE *fsrc)
 
 void tree_words_char_find(struct tree_node *tree, char c, int *n, int mode)
 {
-    if (tree == NULL)
+/*     if (tree == NULL)
         return;
 
     tree_words_char_find(tree->left, c, n, mode);
@@ -117,7 +117,23 @@ void tree_words_char_find(struct tree_node *tree, char c, int *n, int mode)
         if (mode)
             printf("%s ", tree->name);
     }
-    tree_words_char_find(tree->right, c, n, mode);
+    tree_words_char_find(tree->right, c, n, mode); */
+    if (tree == NULL)
+        return;
+    
+    if (tree->name[0] == c)
+    {
+        (*n)++;
+        if (mode)
+            printf("%s ", tree->name);
+        tree_words_char_find(tree->left, c, n, mode);
+        tree_words_char_find(tree->right, c, n, mode);
+    }
+    else if (tree->name[0] > c)
+        tree_words_char_find(tree->left, c, n, mode);
+    else
+        tree_words_char_find(tree->right, c, n, mode);
+
 }
 
 void tree_words_char_find_arr(struct tree_node *tree, char c, int *n, char *words_arr[])

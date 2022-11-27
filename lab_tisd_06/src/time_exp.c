@@ -96,7 +96,7 @@ void time_experiment(void)
 			tmp = fscanf(f, "%s", word_tmp);
 			while (tmp == 1)   
 			{
-				if (memchr(word_tmp, rand_char, sizeof(char)) != NULL)
+				if (word_tmp[0] == rand_char)
 					n++;
 				tmp = fscanf(f, "%s", word_tmp);
 			}
