@@ -120,6 +120,22 @@ void tree_words_char_find(struct tree_node *tree, char c, int *n, int mode)
     tree_words_char_find(tree->right, c, n, mode);
 }
 
+void tree_words_char_find_arr(struct tree_node *tree, char c, int *n, char *words_arr[])
+{
+    if (tree == NULL)
+        return;
+
+    tree_words_char_find_arr(tree->left, c, n, words_arr);
+    if (memchr(tree->name, c, sizeof(char)) != NULL)
+    {
+        (*n)++;
+        char *tmp_word = malloc((strlen(tree->name) + 1) * sizeof(char));
+        strcpy(tmp_word, tree->name);
+        words_arr[*n - 1] = tmp_word;
+    }
+    tree_words_char_find_arr(tree->right, c, n, words_arr);
+}
+
 struct tree_node* node_delete(struct tree_node *tree, const char *name)
 {
     int cmp, flag = 0;
@@ -241,9 +257,24 @@ void node_to_dot(struct tree_node *tree, FILE *f)
     node_to_dot(tree->right, f);
 }
 
-void tree_export_to_dot(FILE *f, struct tree_node *tree)
+void tree_export_to_dot(FILE *f, struct tree_node *tree, char c)
 {
     fprintf(f, "digraph Words {\n");
+
+    if (c != 0)
+    {
+        char *words_arr[100];
+        int n = 0;
+        tree_words_char_find_arr(tree, c, &n, words_arr);
+        fprintf(f, "subgraph tier1\n{\nnode [color=\"lightgreen\",style=\"filled\",group=\"tier1\"]\n");
+        for (int i = 0; i < n; i++)
+        {
+            fprintf(f, "%s\n", words_arr[i]);
+            free(words_arr[i]);
+        }
+        n = 0;
+        fprintf(f, "}\n");
+    }
 
     node_to_dot(tree, f);
 

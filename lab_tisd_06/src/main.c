@@ -163,8 +163,20 @@ int main(void)
 			}
 			case 7:                                                                  //Нарисовать дерево
 			{
+				char c;
+				printf("Do you want to color words that start witch char?\n(input y/n): ");
+				scanf("%c", &c);
+				input_flush();
+				if (c == 'y')
+				{	
+					printf("Input character for search: ");
+					scanf("%c", &c);
+					input_flush();
+				}
+				else
+					c = 0;
 				FILE* dot_f = fopen("words_tree.gv", "w+");
-				tree_export_to_dot(dot_f, init_tree);
+				tree_export_to_dot(dot_f, init_tree, c);
 				fclose(dot_f);
 				continue;
 			}
